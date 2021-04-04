@@ -2,9 +2,7 @@ package com.example.findmate.repositories.posts
 
 import com.google.gson.annotations.SerializedName
 
-data class Post(
-    @SerializedName("_id")
-    val id: String,
+data class CreatePost (
     @SerializedName("text")
     val text: String,
     @SerializedName("location")
@@ -12,7 +10,5 @@ data class Post(
     @SerializedName("age")
     val age: Int,
     @SerializedName("sex")
-    val sex: Int,
-    @SerializedName("createdAt")
-    val createdAt: Long
+    val sex: Int
 )

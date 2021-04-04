@@ -2,7 +2,7 @@ package com.example.findmate.repositories
 
 import com.google.gson.annotations.SerializedName
 
-open class Response<T>() {
+open class ResponseModel<T>() {
     @SerializedName("status")
     val status: Status? = null
 
