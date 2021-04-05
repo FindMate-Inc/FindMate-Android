@@ -1,15 +1,18 @@
 package com.example.findmate.ui.main
 
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.findmate.repositories.ServerResponse
 import com.example.findmate.repositories.posts.CreatePost
+import com.example.findmate.repositories.posts.Post
 import com.example.findmate.repositories.posts.PostsRepository
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(val postRepository: PostsRepository) : ViewModel() {
+    val posts = MutableLiveData<List<Post>>()
 
     fun check() {
         viewModelScope.launch {
@@ -32,6 +35,18 @@ class MainViewModel @Inject constructor(val postRepository: PostsRepository) : V
             val response = postRepository.createPost(CreatePost(text = "text", location = "location", age = 30, sex = 2))
             when (response) {
                 is ServerResponse.SuccessResponse -> Log.d("TestPish", "${response.response.data}")
+                is ServerResponse.ErrorResponse -> Log.d("TestPish", "${response.errorMessage}")
+            }
+        }
+    }
+
+    fun loadPosts() {
+        viewModelScope.launch {
+            val response = postRepository.getPostByLocation("%D0%9A%D0%B8%D0%B5%D0%B2")
+            when (response) {
+                is ServerResponse.SuccessResponse -> {
+                    posts.value = response.response.data
+                }
                 is ServerResponse.ErrorResponse -> Log.d("TestPish", "${response.errorMessage}")
             }
         }

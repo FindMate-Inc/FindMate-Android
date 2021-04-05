@@ -4,10 +4,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
+import androidx.lifecycle.observe
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.findmate.FindMateApplication
 import com.example.findmate.R
 import com.example.findmate.ViewModelFactory
-import kotlinx.coroutines.runBlocking
+import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
@@ -22,6 +24,15 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         (application as FindMateApplication).getComponent().inject(this)
-        Log.d("TestPish", "viewModel ${viewModel.check()}")
+
+        val layoutManager = LinearLayoutManager(applicationContext)
+        val adapter = MainAdapter()
+        posts.adapter = adapter
+        posts.layoutManager = layoutManager
+
+        viewModel.loadPosts()
+        viewModel.posts.observe(this) {
+            adapter.updateList(it)
+        }
     }
 }

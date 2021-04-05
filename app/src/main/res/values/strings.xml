@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">FindMate</string>
+    <string name="sex_m">Парень</string>
+    <string name="sex_w">Девушка</string>
 </resources>
