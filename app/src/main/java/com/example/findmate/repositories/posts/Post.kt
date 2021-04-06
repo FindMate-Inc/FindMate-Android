@@ -7,8 +7,8 @@ data class Post(
     val id: String,
     @SerializedName("text")
     val text: String,
-    @SerializedName("location")
-    val location: String,
+    @SerializedName("locations")
+    val locations: List<String>,
     @SerializedName("age")
     val age: Int,
     @SerializedName("sex")

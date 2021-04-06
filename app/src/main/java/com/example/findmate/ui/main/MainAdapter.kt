@@ -1,5 +1,6 @@
 package com.example.findmate.ui.main
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,6 +48,9 @@ class MainAdapter : RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
         val timeFormatted = getUtcOffsetDateTime(item.createdAt).asRelativeTime(view.context)
         view.tvTime.text = timeFormatted
 
+        Log.d("TestPish", "location ${item.locations.joinToString() }}")
+
+        view.tvLocation.text = item.locations.joinToString()
     }
 
     class MainViewHolder(view: View) : RecyclerView.ViewHolder(view)
