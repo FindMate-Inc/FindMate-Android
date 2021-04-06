@@ -48,8 +48,6 @@ class MainAdapter : RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
         val timeFormatted = getUtcOffsetDateTime(item.createdAt).asRelativeTime(view.context)
         view.tvTime.text = timeFormatted
 
-        Log.d("TestPish", "location ${item.locations.joinToString() }}")
-
         view.tvLocation.text = item.locations.joinToString()
     }
 
