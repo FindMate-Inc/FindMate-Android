@@ -5,6 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.findmate.R
+import com.example.findmate.asRelativeTime
+import com.example.findmate.getUtcOffsetDateTime
 import com.example.findmate.repositories.posts.Post
 import kotlinx.android.synthetic.main.main_post_item.view.*
 
@@ -41,6 +43,10 @@ class MainAdapter : RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
 
         val descriptionFormatted = "$sexFormatted, ${item.age}"
         view.tvDescription.text = descriptionFormatted
+
+        val timeFormatted = getUtcOffsetDateTime(item.createdAt).asRelativeTime(view.context)
+        view.tvTime.text = timeFormatted
+
     }
 
     class MainViewHolder(view: View) : RecyclerView.ViewHolder(view)
