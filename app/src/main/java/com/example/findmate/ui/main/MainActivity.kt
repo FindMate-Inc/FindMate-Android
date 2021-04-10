@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.findmate.FindMateApplication
 import com.example.findmate.R
 import com.example.findmate.ViewModelFactory
+import com.example.findmate.ui.create.CreatePostActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
@@ -29,6 +30,10 @@ class MainActivity : AppCompatActivity() {
         val adapter = MainAdapter()
         posts.adapter = adapter
         posts.layoutManager = layoutManager
+
+        btnCreatePost.setOnClickListener {
+            CreatePostActivity.start(this)
+        }
 
         viewModel.loadPosts()
         viewModel.posts.observe(this) {

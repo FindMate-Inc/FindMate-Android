@@ -1,6 +1,7 @@
 package com.example.findmate.di
 
 import androidx.lifecycle.ViewModel
+import com.example.findmate.ui.create.CreatePostViewModel
 import com.example.findmate.ui.main.MainViewModel
 import dagger.Binds
 import dagger.MapKey
@@ -14,4 +15,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(MainViewModel::class)
     abstract fun bindMainViewModel(mainViewModel: MainViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(CreatePostViewModel::class)
+    abstract fun bindCreatePostViewModel(createPostViewModel: CreatePostViewModel): ViewModel
 }

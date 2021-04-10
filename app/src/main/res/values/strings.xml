@@ -22,4 +22,6 @@
         <item quantity="one">%1$d минуту назад</item>
         <item quantity="other">%1$d минуты назад</item>
     </plurals>
+
+    <string name="createPostText">Создать</string>
 </resources>
