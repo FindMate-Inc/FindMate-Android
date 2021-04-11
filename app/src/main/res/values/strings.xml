@@ -5,7 +5,7 @@
 
     <!-- Date Formatter Extension -->
     <string name="date_formatter_now">Только что</string>
-    <string name="date_formatter_date">dd MMM uu</string>
+    <string name="date_formatter_date">dd MMM</string>
     <plurals name="date_formatter_past_weeks">
         <item quantity="one">%1$d неделя назад</item>
         <item quantity="other">%1$d недели назад</item>

@@ -59,11 +59,11 @@ class MainAdapter : RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
         view.tvText.text = item.text
 
 
-        val descriptionFormatted = "$sexFormatted, ${item.age}"
-        view.tvDescription.text = descriptionFormatted
-
         val timeFormatted = getUtcOffsetDateTime(item.createdDate).asRelativeTime(view.context)
         view.tvTime.text = timeFormatted
+
+        val descriptionFormatted = "$sexFormatted, ${item.age}"
+        view.tvDescription.text = descriptionFormatted
 
         view.tvLocation.text = item.locations.joinToString()
     }
@@ -92,7 +92,7 @@ class MainAdapter : RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
                     age = it.age,
                     createdDate = it.createdAt,
                     couldMinimize = it.text.length > MIN_TEXT_LENGTH,
-                    isMinimized = false
+                    isMinimized = true
                 )
             }
         }

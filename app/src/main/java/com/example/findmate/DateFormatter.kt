@@ -1,6 +1,7 @@
 package com.example.findmate
 
 import android.content.Context
+import android.util.Log
 import java.time.*
 import java.time.format.DateTimeFormatter
 
@@ -17,9 +18,10 @@ fun OffsetDateTime.asRelativeTime(context: Context): String {
     val diffPeriod = Period.between(zonnedTargetTime.toLocalDate(), zonnedCurrentTime.toLocalDate())
     val diffDuration = Duration.between(zonnedTargetTime.toLocalTime(), zonnedCurrentTime.toLocalTime())
 
+    Log.d("TestPish", "diff period ${diffPeriod} ${diffDuration}")
     val resources = context.resources
     return when {
-        diffPeriod.years > 0 || diffPeriod.months > 0 || diffPeriod.days > 7 -> zonnedCurrentTime.format(
+        diffPeriod.years > 0 || diffPeriod.months > 0 || diffPeriod.days > 7 -> zonnedTargetTime.format(
             DateTimeFormatter.ofPattern(resources.getString(R.string.date_formatter_date))
         )
         diffPeriod.days == 7 -> resources.getQuantityString(
@@ -40,6 +42,6 @@ fun OffsetDateTime.asRelativeTime(context: Context): String {
             resources.getQuantityString(R.plurals.date_formatter_past_minutes, minutes, minutes)
         }
         diffDuration.toMinutes() == 0L -> resources.getString(R.string.date_formatter_now)
-        else -> zonnedCurrentTime.format(DateTimeFormatter.ofPattern(resources.getString(R.string.date_formatter_date)))
+        else -> zonnedTargetTime.format(DateTimeFormatter.ofPattern(resources.getString(R.string.date_formatter_date)))
     }
 }

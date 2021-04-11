@@ -11,12 +11,22 @@
     </style>
 
     <style name="AppTheme2" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="android:textAllCaps">true</item>
         <item name="colorPrimary">@color/gold_drop</item>
         <item name="colorPrimaryDark">@color/rose_of_sharon</item>
         <item name="colorAccent">@color/white</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:textColorSecondary">@color/white</item>
+    </style>
+
+    <style name="TextMain">
+        <item name="android:fontFamily">@font/sansserif_regular</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/black_87</item>
+    </style>
+
+    <style name="TextCaption">
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/black_60</item>
     </style>
 </resources>
