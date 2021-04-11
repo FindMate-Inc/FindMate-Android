@@ -9,7 +9,7 @@ interface Api {
     @GET("posts/{id}")
     suspend fun getPostById(@Path("id") name: String): GetPostResponseModel
 
-    @GET("posts/search")
+    @GET("https://run.mocky.io/v3/437d3f17-f1c2-473b-b670-8944c361cede")
     suspend fun getPostsByLocation(@Query("location") location: String): SearchPostResponseModel
 
     @POST("posts")
