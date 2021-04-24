@@ -1,24 +1,20 @@
 package com.example.findmate.ui.main
 
-import android.content.Context
 import android.text.InputFilter
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.findmate.R
 import com.example.findmate.asRelativeTime
 import com.example.findmate.getUtcOffsetDateTime
 import com.example.findmate.repositories.posts.Post
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.main_post_item.view.*
 
 
-class MainAdapter : RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
+class MainAdapter(val onMoreListener: OnMoreListener) :
+    RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
     val items = mutableListOf<PostAdapterItem>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
@@ -60,6 +56,7 @@ class MainAdapter : RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
                 notifyItemChanged(position)
             }
         } else null
+
         view.tvText.setOnClickListener(onClickListener)
         view.tvText.text = item.text
 
@@ -73,18 +70,24 @@ class MainAdapter : RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
         view.tvLocation.text = item.locations.joinToString()
 
         view.btnMore.setOnClickListener {
-            val popupView = LayoutInflater.from(view.context).inflate(R.layout.popup, view.container, false)
-            view.container.addView(popupView,0)
-            popupView.post {
-                popupView.x = (view.btnMore.right - popupView.width).toFloat()
-                popupView.y = view.btnMore.bottom.toFloat()
-            }
+            val location = IntArray(2)
+            it.getLocationOnScreen(location)
+            onMoreListener.onMoreClicked(
+                location[0].toFloat() + it.width,
+                location[1].toFloat(),
+                item.text
+            )
         }
+    }
+
+    interface OnMoreListener {
+        fun onMoreClicked(x: Float, y: Float, id: String)
     }
 
     class MainViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
     data class PostAdapterItem(
+        val id: String,
         val text: String,
         val locations: List<String>,
         val sex: Int,
@@ -100,6 +103,7 @@ class MainAdapter : RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
         fun toAdapterItems(posts: List<Post>): List<PostAdapterItem> {
             return posts.map {
                 PostAdapterItem(
+                    id = it.id,
                     text = it.text,
                     locations = it.locations,
                     sex = it.sex,

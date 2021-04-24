@@ -1,26 +1,25 @@
 package com.example.findmate.ui.main
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.ContextMenu
-import android.view.View
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.findmate.FindMateApplication
 import com.example.findmate.R
 import com.example.findmate.ViewModelFactory
-import com.example.findmate.ui.create.CreatePostActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.popup.*
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), MainAdapter.OnMoreListener {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
 
-    private val viewModel by viewModels<MainViewModel> {viewModelFactory}
+    private val viewModel by viewModels<MainViewModel> { viewModelFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,34 +27,30 @@ class MainActivity : AppCompatActivity() {
 
         (application as FindMateApplication).getComponent().inject(this)
 
+        popupInnerContainer.setOnClickListener {
+            if (popupInnerContainer.isVisible) {
+                popupInnerContainer.isVisible = false
+            }
+        }
+
+        complain.setOnClickListener {
+
+        }
+
         val layoutManager = LinearLayoutManager(applicationContext)
-        val adapter = MainAdapter()
+        val adapter = MainAdapter(onMoreListener = this)
         posts.adapter = adapter
         posts.layoutManager = layoutManager
-/*
-        btnCreatePost.setOnClickListener {
-            CreatePostActivity.start(this)
-        }*/
 
         viewModel.loadPosts()
         viewModel.posts.observe(this) {
             adapter.updateList(it)
         }
-
-        registerForContextMenu(btnCreatePost)
     }
 
-    override fun onCreateContextMenu(
-        menu: ContextMenu?,
-        v: View?,
-        menuInfo: ContextMenu.ContextMenuInfo?
-    ) {
-        super.onCreateContextMenu(menu, v, menuInfo)
-        Log.d("TestPish", "test")
-        menu!!.setHeaderTitle("Context Menu");
-        menu.add(0, v?.getId() ?: 0, 0, "Upload");
-        menu.add(0, v?.getId() ?:0, 0, "Search");
-        menu.add(0, v?.getId()?:0, 0, "Share");
-        menu.add(0, v?.getId()?: 0, 0, "Bookmark");
+    override fun onMoreClicked(x: Float, y: Float, id: String) {
+        popupContainer.x = x - popupContainer.width
+        popupContainer.y = y
+        popupInnerContainer.isVisible = true
     }
 }

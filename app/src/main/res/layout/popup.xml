@@ -1,17 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="@color/white"
-    android:elevation="4dp"
-    android:orientation="vertical">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/popupInnerContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="invisible">
 
-    <TextView
-        style="@style/TextViewBase"
-        android:padding="16dp"
+    <LinearLayout
+        android:id="@+id/popupContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/popup_report"/>
+        android:background="@color/white"
+        android:elevation="4dp"
+        android:orientation="vertical">
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/complain"
+            style="@style/TextViewBase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?selectableItemBackground"
+            android:padding="16dp"
+            android:text="@string/popup_report" />
+    </LinearLayout>
+</FrameLayout>
