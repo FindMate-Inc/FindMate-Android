@@ -12,5 +12,12 @@
         app:font="@font/sansserif_regular"
         app:fontStyle="normal"
         app:fontWeight="400" />
-
+    <font
+        app:font="@font/lobster_regular"
+        app:fontStyle="normal"
+        app:fontWeight="300" />
+    <font
+        app:font="@font/ubuntumono_regular"
+        app:fontStyle="normal"
+        app:fontWeight="400" />
 </font-family>

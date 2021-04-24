@@ -1,15 +1,20 @@
 package com.example.findmate.ui.main
 
+import android.content.Context
 import android.text.InputFilter
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.findmate.R
 import com.example.findmate.asRelativeTime
 import com.example.findmate.getUtcOffsetDateTime
 import com.example.findmate.repositories.posts.Post
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.main_post_item.view.*
 
 
@@ -66,6 +71,15 @@ class MainAdapter : RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
         view.tvDescription.text = descriptionFormatted
 
         view.tvLocation.text = item.locations.joinToString()
+
+        view.btnMore.setOnClickListener {
+            val popupView = LayoutInflater.from(view.context).inflate(R.layout.popup, view.container, false)
+            view.container.addView(popupView,0)
+            popupView.post {
+                popupView.x = (view.btnMore.right - popupView.width).toFloat()
+                popupView.y = view.btnMore.bottom.toFloat()
+            }
+        }
     }
 
     class MainViewHolder(view: View) : RecyclerView.ViewHolder(view)

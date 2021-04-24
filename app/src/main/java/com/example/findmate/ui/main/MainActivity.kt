@@ -3,6 +3,8 @@ package com.example.findmate.ui.main
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.ContextMenu
+import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,14 +32,30 @@ class MainActivity : AppCompatActivity() {
         val adapter = MainAdapter()
         posts.adapter = adapter
         posts.layoutManager = layoutManager
-
+/*
         btnCreatePost.setOnClickListener {
             CreatePostActivity.start(this)
-        }
+        }*/
 
         viewModel.loadPosts()
         viewModel.posts.observe(this) {
             adapter.updateList(it)
         }
+
+        registerForContextMenu(btnCreatePost)
+    }
+
+    override fun onCreateContextMenu(
+        menu: ContextMenu?,
+        v: View?,
+        menuInfo: ContextMenu.ContextMenuInfo?
+    ) {
+        super.onCreateContextMenu(menu, v, menuInfo)
+        Log.d("TestPish", "test")
+        menu!!.setHeaderTitle("Context Menu");
+        menu.add(0, v?.getId() ?: 0, 0, "Upload");
+        menu.add(0, v?.getId() ?:0, 0, "Search");
+        menu.add(0, v?.getId()?:0, 0, "Share");
+        menu.add(0, v?.getId()?: 0, 0, "Bookmark");
     }
 }

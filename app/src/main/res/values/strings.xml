@@ -23,5 +23,16 @@
         <item quantity="other">%1$d минуты назад</item>
     </plurals>
 
+    <string name="createPostTitle">Создать анкету</string>
+    <string name="createPostAgeTitle">Мой возраст</string>
+    <string name="createPostSexTitle">Мой пол</string>
+    <string name="createPostLocationTitle">Мой город</string>
+    <string name="createPostTextTitle">Пост</string>
     <string name="createPostText">Создать</string>
+
+    <string name="createPostRules">Чем подробнее вы расскажите о себе и кого ищите, тем больше шансов на успех\n\nПоля локации, пола, возраста не обязательны. Они подсказывают на что можно обратить внимание в вашей анкете\n\nДобавьте удобный способ связи</string>
+
+    <string name="createPostRulesShort">Расскажи о себе\nи о том кого хочешь найти</string>
+
+    <string name="popup_report">Пожаловаться</string>
 </resources>

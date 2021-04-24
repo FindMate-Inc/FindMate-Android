@@ -11,8 +11,8 @@
     </style>
 
     <style name="AppTheme2" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="colorPrimary">@color/gold_drop</item>
-        <item name="colorPrimaryDark">@color/rose_of_sharon</item>
+        <item name="colorPrimary">@color/selective_yellow</item>
+        <item name="colorPrimaryDark">@color/pirate_gold</item>
         <item name="colorAccent">@color/white</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -20,13 +20,49 @@
 
     <style name="TextMain">
         <item name="android:fontFamily">@font/sansserif_regular</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/black_87</item>
     </style>
 
     <style name="TextCaption">
         <item name="android:fontFamily">@font/roboto_regular</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/black_60</item>
     </style>
+
+    <style name="NullStyle">
+        <item name="android:fontFamily">@font/roboto_regular</item>
+    </style>
+
+    <style name="EditTextTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorControlNormal">@color/black_5</item>
+        <item name="colorControlActivated">@color/gold_drop</item>
+        <item name="colorControlHighlight">@color/gold_drop</item>
+    </style>
+
+    <style name="layout">
+        <item name="colorAccent">@color/dodger_blue</item>
+    </style>
+
+    <style name="lobster">
+        <item name="android:fontFamily">@font/lobster_regular</item>
+    </style>
+
+    <style name="InputLayoutBase" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="android:background">@drawable/selector_edit_text_line</item>
+        <item name="boxBackgroundMode">none</item>
+        <item name="boxStrokeColor">@color/white</item>
+    </style>
+
+    <style name="InputBase">
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:inputType">text|textNoSuggestions</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="TextViewBase">
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
 </resources>
