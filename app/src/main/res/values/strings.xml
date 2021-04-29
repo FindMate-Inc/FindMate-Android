@@ -35,4 +35,6 @@
     <string name="createPostRulesShort">Расскажи о себе\nи о том кого хочешь найти</string>
 
     <string name="popup_report">Пожаловаться</string>
+    <string name="postsLocationFilter">Поиск по локации</string>
+    <string name="mainFilterLabel">Фильтр</string>
 </resources>

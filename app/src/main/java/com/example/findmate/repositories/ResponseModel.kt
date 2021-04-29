@@ -10,11 +10,13 @@ open class ResponseModel<T>() {
     val data: T? = null
 
     data class Status(
-        @SerializedName("message")
-        val message: String,
-        @SerializedName("details")
-        val details: String,
-        @SerializedName("timeStamp")
-        val timeStamp: Long
+        @SerializedName("success")
+        val success: Boolean,
+        @SerializedName("errorMessage")
+        val errorMessage: String,
+        @SerializedName("errorCode")
+        val errorCode: String,
+        @SerializedName("timestamp")
+        val timestamp: Long
     )
 }

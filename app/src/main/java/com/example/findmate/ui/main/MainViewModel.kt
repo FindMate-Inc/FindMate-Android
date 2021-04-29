@@ -12,7 +12,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(val postRepository: PostsRepository) : ViewModel() {
+    val searchLocation = MutableLiveData<String>("")
     val posts = MutableLiveData<List<Post>>()
+    val screenState = MutableLiveData<States>(States.DEFAULT)
 
     fun check() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -34,12 +36,36 @@ class MainViewModel @Inject constructor(val postRepository: PostsRepository) : V
 
     fun loadPosts() {
         viewModelScope.launch(Dispatchers.Main) {
-            val response = postRepository.getPostByLocation("%D0%9A%D0%B8%D0%B5%D0%B2")
+            val response = postRepository.getPostByLocation("Киев")
 
             when (response) {
                 is ServerResponse.SuccessResponse -> posts.value = response.response.data
                 is ServerResponse.ErrorResponse -> Log.d("TestPish", "${response.errorMessage}")
             }
+            Log.d("TestPish", "response ${posts.value}")
         }
+    }
+
+    fun search() {
+        viewModelScope.launch(Dispatchers.Main) {
+            Log.d("TestPish", "input ${searchLocation.value}")
+            val response = postRepository.getPostByLocation(searchLocation.value!!)
+
+            when (response) {
+                is ServerResponse.SuccessResponse -> posts.value = response.response.data
+                is ServerResponse.ErrorResponse -> Log.d("TestPish", "${response.errorMessage}")
+            }
+            Log.d("TestPish", "response ${posts.value}")
+        }
+        screenState.value = States.DEFAULT
+    }
+
+    fun clearFilter() {
+        searchLocation.value = ""
+    }
+
+
+    enum class States {
+        SEARCH, DEFAULT
     }
 }

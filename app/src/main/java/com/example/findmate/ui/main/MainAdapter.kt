@@ -4,6 +4,7 @@ import android.text.InputFilter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.findmate.R
@@ -11,6 +12,7 @@ import com.example.findmate.asRelativeTime
 import com.example.findmate.getUtcOffsetDateTime
 import com.example.findmate.repositories.posts.Post
 import kotlinx.android.synthetic.main.main_post_item.view.*
+import kotlin.random.Random
 
 
 class MainAdapter(val onMoreListener: OnMoreListener) :
@@ -77,6 +79,13 @@ class MainAdapter(val onMoreListener: OnMoreListener) :
                 location[1].toFloat(),
                 item.text
             )
+        }
+
+        val random = Random.nextInt(0, 100)
+        if (random > 60) {
+            view.container.background = ContextCompat.getDrawable(view.context, R.drawable.drawable_post_background_orange)
+        } else {
+            view.container.background = ContextCompat.getDrawable(view.context, R.drawable.drawable_post_background_blue)
         }
     }
 

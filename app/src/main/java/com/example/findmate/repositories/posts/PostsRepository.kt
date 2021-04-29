@@ -45,4 +45,15 @@ class PostsRepository @Inject constructor(
             }
         }
     }
+
+    suspend fun getPosts(): ServerResponse<ResponseGetPostsModel> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = api.getPosts()
+                ServerResponse.SuccessResponse(response)
+            } catch (ex: java.lang.Exception) {
+                ServerResponse.ErrorResponse(ex.message ?: "error")
+            }
+        }
+    }
 }

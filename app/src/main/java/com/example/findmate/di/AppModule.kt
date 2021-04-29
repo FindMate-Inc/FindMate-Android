@@ -31,6 +31,7 @@ class AppModule {
     @Provides
     @Singleton
     fun provideRetrofit(gson: Gson, okHttpClient: OkHttpClient): Api {
+
         val retrofitClient = Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create(gson))
             .baseUrl(BASE_URL)
@@ -41,6 +42,6 @@ class AppModule {
     }
 
     companion object {
-        const val BASE_URL = "https://7524db3f-e380-4d81-b585-5f69913be85e.mock.pstmn.io/"
+        const val BASE_URL = "https://find-mate-api.herokuapp.com/api/"
     }
 }

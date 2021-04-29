@@ -12,9 +12,11 @@
 
     <style name="AppTheme2" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/selective_yellow</item>
-        <item name="colorPrimaryDark">@color/pirate_gold</item>
+        <item name="colorPrimaryDark">@color/white</item>
         <item name="colorAccent">@color/white</item>
         <item name="windowActionBar">false</item>
+        <item name="actionBarItemBackground">@color/white</item>
+
         <item name="windowNoTitle">true</item>
     </style>
 
