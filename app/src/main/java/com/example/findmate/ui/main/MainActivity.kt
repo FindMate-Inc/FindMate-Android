@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.findmate.FindMateApplication
 import com.example.findmate.R
 import com.example.findmate.ViewModelFactory
@@ -63,6 +64,12 @@ class MainActivity : AppCompatActivity() {
         })
         posts.adapter = adapter
         posts.layoutManager = layoutManager
+        posts.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                viewModel.loadMorePosts(layoutManager.findLastVisibleItemPosition())
+            }
+        })
 
         popupInnerContainer.setOnClickListener {
             if (popupInnerContainer.isVisible) {
@@ -70,7 +77,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.loadPosts()
+        viewModel.loadNewPosts()
         viewModel.posts.observe(this) {
             adapter.updateList(it)
         }
@@ -97,7 +104,7 @@ class MainActivity : AppCompatActivity() {
         locationFilter.setOnEditorActionListener(object : TextView.OnEditorActionListener {
             override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    viewModel.search()
+                    viewModel.loadNewPosts()
                     return true
                 }
                 return false
@@ -105,7 +112,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         viewModel.searchLocation.observe(this) {
-            if (it.isBlank()) {
+            if (it.isNullOrBlank()) {
                 tvFilterText.text = getString(R.string.mainFilterLabel)
                 locationFilter.text?.clear()
             } else {

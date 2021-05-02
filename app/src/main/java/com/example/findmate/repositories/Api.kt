@@ -14,7 +14,7 @@ interface Api {
     suspend fun getPostById(@Path("id") name: String): GetPostResponseModel
 
     @GET("posts")
-    suspend fun getPostsByLocation(@Query("location") location: String): SearchPostResponseModel
+    suspend fun getPostsByLocation(@Query("location") location: String?, @Query("page") page: Int): SearchPostResponseModel
 
     @POST("posts")
     suspend fun createPost(@Body createPost: CreatePost): ResponseModel<Any?>

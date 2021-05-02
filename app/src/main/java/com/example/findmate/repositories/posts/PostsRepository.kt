@@ -35,10 +35,10 @@ class PostsRepository @Inject constructor(
         }
     }
 
-    suspend fun getPostByLocation(location: String): ServerResponse<SearchPostResponseModel> {
+    suspend fun getPostByLocation(location: String?, page: Int): ServerResponse<SearchPostResponseModel> {
         return withContext(Dispatchers.IO) {
             try {
-                val response = api.getPostsByLocation(location)
+                val response = api.getPostsByLocation(location, page)
                 ServerResponse.SuccessResponse(response)
             } catch (ex: Exception) {
                 ServerResponse.ErrorResponse(ex.message ?: "error")
