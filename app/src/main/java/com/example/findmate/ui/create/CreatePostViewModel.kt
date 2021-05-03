@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.findmate.repositories.ServerResponse
 import com.example.findmate.repositories.posts.CreatePost
-import com.example.findmate.repositories.posts.Post
 import com.example.findmate.repositories.posts.PostsRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,24 +21,15 @@ class CreatePostViewModel @Inject constructor(val postRepository: PostsRepositor
     val textError = MutableLiveData<Boolean>(false)
 
     fun createPost() {
-        val textLength = text.value?.length?:0
-        if (textLength < 25 || textLength > 4000) {
-            textError.value = true
-            text.observeForever {
-                if (it.length in 26..4000) {
-                    textError.value = false
-                }
-            }
-            return
-        }
+        if (!isValid()) return
 
         viewModelScope.launch(Dispatchers.IO) {
             val response = postRepository.createPost(
                 CreatePost(
                     text = text.value!!,
-                    location = listOf(location.value?:"Интернет"),
-                    age = age.value?.toInt() ?: 1,
-                    sex = sex.value?.toInt() ?: 3
+                    location = parseLocations(),
+                    age = parseAge(),
+                    sex = parseSex()
                 )
             )
 
@@ -48,5 +38,45 @@ class CreatePostViewModel @Inject constructor(val postRepository: PostsRepositor
                 is ServerResponse.ErrorResponse -> Log.d("TestPish", "${response.errorMessage}")
             }
         }
+    }
+
+    private fun isValid():Boolean {
+        val textLength = text.value?.length?:0
+        if (textLength < 25 || textLength > 4000) {
+            textError.value = true
+            text.observeForever {
+                if (it.length in 26..4000) {
+                    textError.value = false
+                }
+            }
+            return false
+        }
+        return true
+    }
+
+    private fun parseLocations(): List<String> {
+        val locationString = location.value
+        if (locationString.isNullOrEmpty()) return listOf(DEFAULT_LOCATION)
+        return locationString.split(',').toMutableList().map {
+            it.trim()
+        }
+    }
+
+    private fun parseAge(): Int {
+        val ageString = age.value
+        if (ageString.isNullOrEmpty() || ageString.isBlank()) return DEFAULT_AGE
+        return ageString.toInt()
+    }
+
+    private fun parseSex(): Int {
+        val sexString = sex.value
+        if (sexString.isNullOrEmpty() || sexString.isBlank()) return DEFAULT_SEX
+        return sexString.toInt()
+    }
+
+    companion object {
+        const val DEFAULT_LOCATION = "Интернет"
+        const val DEFAULT_AGE = 1
+        const val DEFAULT_SEX = 3
     }
 }
