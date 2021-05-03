@@ -16,29 +16,30 @@ class MainViewModel @Inject constructor(private val postRepository: PostsReposit
 
     var currentPage = 1
     var totalPages = 1
-    var isNewPostLoading = false
 
     fun clearFilter() {
         searchLocation.value = ""
     }
 
     fun loadNewPosts() {
+        screenState.value = States.LOADING
         viewModelScope.launch {
             currentPage = 1
             val newPosts = loadPosts(searchLocation.value, currentPage)
             posts.value = newPosts ?: emptyList()
+            screenState.value = States.DEFAULT
         }
     }
 
     fun loadMorePosts(lastVisiblePostPosition: Int) {
         val items = posts.value ?: return
-        if (lastVisiblePostPosition > items.size - 1 - THRESHOLD && !isNewPostLoading && currentPage < totalPages) {
-            isNewPostLoading = true
+        if (lastVisiblePostPosition > items.size - 1 - THRESHOLD && currentPage < totalPages && screenState.value != States.LOADING) {
+            screenState.value = States.LOADING
             viewModelScope.launch {
                 currentPage++
                 val nextPosts = loadPosts(searchLocation.value, currentPage)
                 posts.value = items + (nextPosts ?: emptyList())
-                isNewPostLoading = false
+                screenState.value = States.DEFAULT
             }
         }
     }
@@ -63,7 +64,7 @@ class MainViewModel @Inject constructor(private val postRepository: PostsReposit
     }
 
     enum class States {
-        SEARCH, DEFAULT
+        SEARCH, DEFAULT, LOADING
     }
 
     companion object {

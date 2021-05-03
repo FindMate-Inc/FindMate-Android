@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -14,6 +15,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.example.findmate.FindMateApplication
 import com.example.findmate.R
 import com.example.findmate.ViewModelFactory
@@ -22,6 +24,7 @@ import com.example.findmate.ui.create.CreatePostActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.popup.*
 import javax.inject.Inject
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -46,15 +49,17 @@ class MainActivity : AppCompatActivity() {
             when (it) {
                 MainViewModel.States.DEFAULT -> showDefaultState()
                 MainViewModel.States.SEARCH -> showSearchState()
+                MainViewModel.States.LOADING -> showLoadingState()
                 else -> showDefaultState()
             }
         }
 
         btnCreatePost.setOnClickListener { CreatePostActivity.start(this) }
     }
+    var layoutManager: LinearLayoutManager? = null
 
     private fun initPosts() {
-        val layoutManager = LinearLayoutManager(applicationContext)
+        layoutManager = LinearLayoutManager(applicationContext)
         val adapter = MainAdapter(object : MainAdapter.OnMoreListener {
             override fun onMoreClicked(x: Float, y: Float, id: String) {
                 popupContainer.x = x - popupContainer.width
@@ -64,12 +69,18 @@ class MainActivity : AppCompatActivity() {
         })
         posts.adapter = adapter
         posts.layoutManager = layoutManager
+
+        postsSwipeContainer.setOnRefreshListener {
+            viewModel.loadNewPosts()
+        }
+
         posts.addOnScrollListener(object: RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                viewModel.loadMorePosts(layoutManager.findLastVisibleItemPosition())
+                viewModel.loadMorePosts(layoutManager?.findLastVisibleItemPosition() ?: 0)
             }
         })
+
 
         popupInnerContainer.setOnClickListener {
             if (popupInnerContainer.isVisible) {
@@ -132,6 +143,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showSearchState() {
+        postsSwipeContainer.isRefreshing = false
         locationFilter.isVisible = true
         ivBackButton.isVisible = true
         ivSearch.isVisible = false
@@ -139,10 +151,11 @@ class MainActivity : AppCompatActivity() {
         toolbarTitle.isVisible = false
         tvFilterText.isVisible = false
         locationFilter.requestFocus()
-        keyBoardManager?.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
+        keyBoardManager?.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
     }
 
     private fun showDefaultState() {
+        postsSwipeContainer.isRefreshing = false
         locationFilter.isVisible = false
         ivBackButton.isVisible = false
         toolbarTitle.isVisible = true
@@ -150,6 +163,18 @@ class MainActivity : AppCompatActivity() {
         ivClear.isVisible = false
         tvFilterText.isVisible = true
         locationFilter.clearFocus()
-        keyBoardManager?.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
+        keyBoardManager?.hideSoftInputFromWindow(root.windowToken, 0)
+    }
+
+    private fun showLoadingState() {
+        postsSwipeContainer.isRefreshing = true
+        locationFilter.isVisible = false
+        ivBackButton.isVisible = false
+        toolbarTitle.isVisible = true
+        ivSearch.isVisible = true
+        ivClear.isVisible = false
+        tvFilterText.isVisible = true
+        locationFilter.clearFocus()
+        keyBoardManager?.hideSoftInputFromWindow(root.windowToken, 0)
     }
 }
