@@ -50,24 +50,27 @@
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
         android:hint="@string/createPostAgeTitle"
+        app:helperTextEnabled="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
         <EditText
-            style="@style/InputBase"
             android:id="@+id/inputAge"
+            style="@style/InputBase"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:maxLength="2" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/inputSexContainer"
+        style="@style/InputLayoutBase"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="@string/createPostSexTitle"
         android:layout_margin="12dp"
-        style="@style/InputLayoutBase"
+        android:hint="@string/createPostSexTitle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/inputAgeContainer">
@@ -76,14 +79,17 @@
             android:id="@+id/inputSex"
             style="@style/InputBase"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:digits="123"
+            android:inputType="number"
+            android:maxLength="1" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/inputLocationContainer"
         style="@style/InputLayoutBase"
-        android:layout_height="wrap_content"
         android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_margin="12dp"
         android:hint="@string/createPostLocationTitle"
         app:layout_constraintEnd_toEndOf="parent"
@@ -92,11 +98,11 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/inputLocation"
+            style="@style/InputBase"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/InputBase" />
+            android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
-
 
     <TextView
         android:id="@+id/tvRules"
@@ -120,25 +126,25 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="24dp"
-        android:background="@drawable/selector_edit_text_rectangle"
-        android:layout_marginEnd="24dp"
         android:layout_marginTop="8dp"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"
+        android:layout_marginEnd="24dp"
         android:layout_marginBottom="16dp"
+        app:helperText="@string/createPostTextHelper"
+        app:layout_constraintBottom_toTopOf="@+id/btnCreatePost"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/btnCreatePost"
         app:layout_constraintTop_toBottomOf="@+id/tvRules">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/inputText"
+            style="@style/InputBase"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textSize="18sp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/selector_edit_text_rectangle"
             android:gravity="top"
-            android:fontFamily="@font/roboto_regular"
-            android:inputType="text|textMultiLine" />
+            android:inputType="text|textMultiLine|textNoSuggestions"
+            android:textSize="18sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
@@ -152,7 +158,6 @@
         android:fontFamily="@font/roboto_medium"
         android:gravity="center"
         android:text="@string/createPostText"
-        android:inputType="text|textMultiLine"
         android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"

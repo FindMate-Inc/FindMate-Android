@@ -1,5 +1,6 @@
 package com.example.findmate.di
 
+import android.util.Log
 import com.example.findmate.repositories.Api
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -25,6 +26,15 @@ class AppModule {
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
         val client = OkHttpClient.Builder()
+
+        client.addInterceptor { chain ->
+            val request = chain.request()
+            Log.e("RETROFITICH",
+                "\nrequest:\n${request.body().toString()}\nheaders:\n${request.headers()
+                    .toString()}"
+            )
+            chain.proceed(request)
+        }
         return client.build()
     }
 

@@ -25,10 +25,15 @@
 
     <string name="createPostTitle">Создать анкету</string>
     <string name="createPostAgeTitle">Мой возраст</string>
+    <string name="createPostAgeHelper">от 1 до 99</string>
     <string name="createPostSexTitle">Мой пол</string>
+    <string name="createPostSexHelper">1 - кун 2 - тян 3 - не отвечать</string>
     <string name="createPostLocationTitle">Мой город</string>
+    <string name="createPostLocationHelper">Минск, Гродно, Беларусь</string>
     <string name="createPostTextTitle">Пост</string>
     <string name="createPostText">Создать</string>
+    <string name="createPostTextHelper">*обязательное поле</string>
+    <string name="createPostTextError">поле должно содержать больше 25 и меньше 4000 символов</string>
 
     <string name="createPostRules">Чем подробнее вы расскажите о себе и кого ищите, тем больше шансов на успех\n\nПоля локации, пола, возраста не обязательны. Они подсказывают на что можно обратить внимание в вашей анкете\n\nДобавьте удобный способ связи</string>
 

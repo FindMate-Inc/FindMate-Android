@@ -8,18 +8,38 @@ import com.example.findmate.repositories.ServerResponse
 import com.example.findmate.repositories.posts.CreatePost
 import com.example.findmate.repositories.posts.Post
 import com.example.findmate.repositories.posts.PostsRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class CreatePostViewModel @Inject constructor(val postRepository: PostsRepository) : ViewModel() {
-    fun createPost(age: String, location: String, sex: String, text: String) {
-        viewModelScope.launch {
+
+    val age = MutableLiveData<String>(null)
+    val sex = MutableLiveData<String>(null)
+    val location = MutableLiveData<String>(null)
+    val text = MutableLiveData<String>("")
+
+    val textError = MutableLiveData<Boolean>(false)
+
+    fun createPost() {
+        val textLength = text.value?.length?:0
+        if (textLength < 25 || textLength > 4000) {
+            textError.value = true
+            text.observeForever {
+                if (it.length in 26..4000) {
+                    textError.value = false
+                }
+            }
+            return
+        }
+
+        viewModelScope.launch(Dispatchers.IO) {
             val response = postRepository.createPost(
                 CreatePost(
-                    text = text,
-                    location = location,
-                    age = age.toInt(),
-                    sex = sex.toInt()
+                    text = text.value!!,
+                    location = listOf(location.value?:"Интернет"),
+                    age = age.value?.toInt() ?: 1,
+                    sex = sex.value?.toInt() ?: 3
                 )
             )
 
@@ -29,6 +49,4 @@ class CreatePostViewModel @Inject constructor(val postRepository: PostsRepositor
             }
         }
     }
-
-    val posts = MutableLiveData<List<Post>>()
 }

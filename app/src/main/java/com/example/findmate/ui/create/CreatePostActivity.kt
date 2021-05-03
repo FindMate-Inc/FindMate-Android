@@ -2,18 +2,16 @@ package com.example.findmate.ui.create
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Typeface
+import android.content.res.ColorStateList
 import android.os.Bundle
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.SpannableStringBuilder
-import android.text.TextPaint
-import android.text.style.MetricAffectingSpan
-import android.text.style.TypefaceSpan
-import android.util.Log
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.lifecycle.observe
 import com.example.findmate.FindMateApplication
 import com.example.findmate.R
 import com.example.findmate.ViewModelFactory
@@ -33,14 +31,96 @@ class CreatePostActivity : AppCompatActivity() {
 
         (application as FindMateApplication).getComponent().inject(this)
 
-        btnCreatePost.setOnClickListener {
-            val age = inputAge.text.toString()
-            //val location = inputLocation.text.toString()
-            //val sex = inputSex.text.toString()
-            //val text = inputText.text.toString()
-            //viewModel.createPost(age, location, sex, text)
+        inputAge.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                viewModel.age.value = s.toString()
+            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+
+        inputAge.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                inputAgeContainer.isHelperTextEnabled = true
+                inputAgeContainer.helperText = getString(R.string.createPostAgeHelper)
+            } else inputAgeContainer.isHelperTextEnabled = false
         }
 
+        inputSex.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                viewModel.sex.value = s.toString()
+            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+
+        inputSex.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                inputSexContainer.isHelperTextEnabled = true
+                inputSexContainer.helperText = getString(R.string.createPostSexHelper)
+            } else inputSexContainer.isHelperTextEnabled = false
+        }
+
+        inputLocation.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                viewModel.location.value = s.toString()
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+
+        inputLocation.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                inputLocationContainer.isHelperTextEnabled = true
+                inputLocationContainer.helperText = getString(R.string.createPostLocationHelper)
+            } else inputLocationContainer.isHelperTextEnabled = false
+        }
+
+        inputText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                viewModel.text.value = s.toString()
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+
+        viewModel.textError.observe(this) {
+            if (it) {
+                inputTextContainer.helperText = getString(R.string.createPostTextError)
+                inputTextContainer.setHelperTextColor(
+                    ColorStateList.valueOf(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.pomegranate
+                        )
+                    )
+                )
+                inputText.background = ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.selector_edit_text_rectangle_red,
+                    null
+                )
+            } else {
+                inputTextContainer.helperText = getString(R.string.createPostTextHelper)
+                inputTextContainer.setHelperTextColor(
+                    ColorStateList.valueOf(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.black_38
+                        )
+                    )
+                )
+                inputText.background = ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.selector_edit_text_rectangle,
+                    null
+                )
+            }
+        }
+
+        btnCreatePost.setOnClickListener { viewModel.createPost() }
         ivBackButton.setOnClickListener { finish() }
     }
 
