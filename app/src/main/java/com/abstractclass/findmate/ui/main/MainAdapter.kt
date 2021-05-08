@@ -19,8 +19,8 @@ class MainAdapter(private val moreMenuListener: MoreMenuListener) :
     RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
     val items = mutableListOf<PostAdapterItem>()
 
-    val minimizedFilter = arrayOf(InputFilter.LengthFilter(MIN_TEXT_LENGTH))
-    val maximizedFilter = arrayOf(InputFilter.LengthFilter(MAX_TEXT_LENGTH))
+    private val minimizedFilter = arrayOf(InputFilter.LengthFilter(MIN_TEXT_LENGTH))
+    private val maximizedFilter = arrayOf(InputFilter.LengthFilter(MAX_TEXT_LENGTH))
     var openedMenuItemView: View? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
@@ -54,38 +54,13 @@ class MainAdapter(private val moreMenuListener: MoreMenuListener) :
             view.context.getString(R.string.sex_w)
         } else "-"
 
-        view.mist.isVisible = item.couldMinimize && item.isMinimized
-        view.tvText.filters = if (item.isMinimized) minimizedFilter else maximizedFilter
-        val onClickListener = if (item.couldMinimize) {
-            View.OnClickListener {
-                item.isMinimized = !item.isMinimized
-                notifyItemChanged(position)
-            }
-        } else null
-
-        //view.tvText.setOnClickListener(onClickListener)
-        view.tvText.text = item.text
+        val descriptionFormatted = "$sexFormatted, ${item.age}"
+        view.tvDescription.text = descriptionFormatted
 
         val timeFormatted = getUtcOffsetDateTime(item.createdDate).asRelativeTime(view.context)
         view.tvTime.text = timeFormatted
 
-        val descriptionFormatted = "$sexFormatted, ${item.age}"
-        view.tvDescription.text = descriptionFormatted
-
         view.tvLocation.text = item.locations.joinToString()
-
-        view.btnMore.setOnClickListener {
-            openedMenuItemView?.isVisible = false
-            view.popupContainer.isVisible = true
-            openedMenuItemView = view.popupContainer
-        }
-        view.container.setOnClickListener {
-            hidePanel()
-        }
-
-        view.complain.setOnClickListener {
-            moreMenuListener.onReportClicked(item.id)
-        }
 
         val random = Random.nextInt(0, 100)
         if (random > 60) {
@@ -94,6 +69,37 @@ class MainAdapter(private val moreMenuListener: MoreMenuListener) :
         } else {
             view.container.background =
                 ContextCompat.getDrawable(view.context, R.drawable.drawable_post_background_blue)
+        }
+
+        initMoreMenu(view, item)
+
+        /*val onClickListener = if (item.couldMinimize) {
+            View.OnClickListener {
+                item.isMinimized = !item.isMinimized
+                notifyItemChanged(position)
+            }
+        } else null
+
+        view.tvText.setOnClickListener(onClickListener)
+
+        view.mist.isVisible = item.couldMinimize && item.isMinimized
+        view.tvText.filters = if (item.isMinimized) minimizedFilter else maximizedFilter*/
+    }
+
+    private fun initMoreMenu(view: View, item: PostAdapterItem) {
+        view.btnMore.setOnClickListener {
+            openedMenuItemView?.isVisible = false
+            view.popupContainer.isVisible = true
+            openedMenuItemView = view.popupContainer
+        }
+
+        view.root.setOnClickListener {
+            hidePanel()
+        }
+
+        view.complain.setOnClickListener {
+            moreMenuListener.onReportClicked(item.id)
+            openedMenuItemView?.isVisible = false
         }
     }
 
