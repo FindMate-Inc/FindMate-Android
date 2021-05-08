@@ -75,7 +75,7 @@
             android:padding="8dp"
             android:src="@drawable/ic_search" />
 
-        <com.example.findmate.ui.addons.SearchLocationEditText
+        <com.abstractclass.findmate.ui.addons.SearchLocationEditText
             android:id="@+id/locationFilter"
             android:layout_width="0dp"
             android:layout_height="match_parent"
