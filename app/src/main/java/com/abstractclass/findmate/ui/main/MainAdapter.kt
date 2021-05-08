@@ -15,13 +15,20 @@ import kotlinx.android.synthetic.main.main_post_item.view.*
 import kotlin.random.Random
 
 
-class MainAdapter(val onMoreListener: OnMoreListener) :
+class MainAdapter(private val moreMenuListener: MoreMenuListener) :
     RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
     val items = mutableListOf<PostAdapterItem>()
+
+    val minimizedFilter = arrayOf(InputFilter.LengthFilter(MIN_TEXT_LENGTH))
+    val maximizedFilter = arrayOf(InputFilter.LengthFilter(MAX_TEXT_LENGTH))
+    var openedMenuItemView: View? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.main_post_item, parent, false)
+        view.setOnClickListener {
+            openedMenuItemView?.isVisible = false
+        }
         return MainViewHolder(view)
     }
 
@@ -34,9 +41,6 @@ class MainAdapter(val onMoreListener: OnMoreListener) :
         items.addAll(toAdapterItems(newItems))
         notifyDataSetChanged()
     }
-
-    val minimizedFilter = arrayOf(InputFilter.LengthFilter(MIN_TEXT_LENGTH))
-    val maximizedFilter = arrayOf(InputFilter.LengthFilter(MAX_TEXT_LENGTH))
 
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
         val view = holder.itemView
@@ -59,9 +63,8 @@ class MainAdapter(val onMoreListener: OnMoreListener) :
             }
         } else null
 
-        view.tvText.setOnClickListener(onClickListener)
+        //view.tvText.setOnClickListener(onClickListener)
         view.tvText.text = item.text
-
 
         val timeFormatted = getUtcOffsetDateTime(item.createdDate).asRelativeTime(view.context)
         view.tvTime.text = timeFormatted
@@ -72,28 +75,37 @@ class MainAdapter(val onMoreListener: OnMoreListener) :
         view.tvLocation.text = item.locations.joinToString()
 
         view.btnMore.setOnClickListener {
-            val location = IntArray(2)
-            it.getLocationOnScreen(location)
-            onMoreListener.onMoreClicked(
-                location[0].toFloat() + it.width,
-                location[1].toFloat(),
-                item.text
-            )
+            openedMenuItemView?.isVisible = false
+            view.popupContainer.isVisible = true
+            openedMenuItemView = view.popupContainer
+        }
+        view.container.setOnClickListener {
+            hidePanel()
+        }
+
+        view.complain.setOnClickListener {
+            moreMenuListener.onReportClicked(item.id)
         }
 
         val random = Random.nextInt(0, 100)
         if (random > 60) {
-            view.container.background = ContextCompat.getDrawable(view.context, R.drawable.drawable_post_background_orange)
+            view.container.background =
+                ContextCompat.getDrawable(view.context, R.drawable.drawable_post_background_orange)
         } else {
-            view.container.background = ContextCompat.getDrawable(view.context, R.drawable.drawable_post_background_blue)
+            view.container.background =
+                ContextCompat.getDrawable(view.context, R.drawable.drawable_post_background_blue)
         }
     }
 
-    interface OnMoreListener {
-        fun onMoreClicked(x: Float, y: Float, id: String)
+    fun hidePanel() {
+        openedMenuItemView?.popupContainer?.isVisible = false
     }
 
-    class MainViewHolder(view: View) : RecyclerView.ViewHolder(view)
+    interface MoreMenuListener {
+        fun onReportClicked(id: String)
+    }
+
+    inner class MainViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
     data class PostAdapterItem(
         val id: String,
@@ -103,7 +115,8 @@ class MainAdapter(val onMoreListener: OnMoreListener) :
         val age: Int,
         val createdDate: Long,
         val couldMinimize: Boolean,
-        var isMinimized: Boolean
+        var isMinimized: Boolean,
+        var isMenuOpened: Boolean
     )
 
     companion object {
@@ -119,7 +132,8 @@ class MainAdapter(val onMoreListener: OnMoreListener) :
                     age = it.age,
                     createdDate = it.createdAt,
                     couldMinimize = it.text.length > MIN_TEXT_LENGTH,
-                    isMinimized = true
+                    isMinimized = true,
+                    isMenuOpened = false
                 )
             }
         }

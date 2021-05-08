@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.abstractclass.findmate.repositories.ServerResponse
-import com.abstractclass.findmate.repositories.posts.CreatePost
+import com.abstractclass.findmate.repositories.posts.create.CreatePost
 import com.abstractclass.findmate.repositories.posts.PostsRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

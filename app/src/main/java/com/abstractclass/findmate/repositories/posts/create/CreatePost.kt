@@ -1,4 +1,4 @@
-package com.abstractclass.findmate.repositories.posts
+package com.abstractclass.findmate.repositories.posts.create
 
 import com.google.gson.annotations.SerializedName
 

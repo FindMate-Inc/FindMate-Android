@@ -7,6 +7,7 @@
     android:id="@+id/container"
     android:layout_marginTop="8dp"
     android:layout_marginEnd="16dp"
+    android:clickable="true"
     android:layout_marginBottom="8dp"
     android:background="@drawable/white_round_background"
     android:elevation="4dp"
@@ -91,4 +92,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvText" />
 
+    <!-- Post Menu -->
+    <LinearLayout
+        android:id="@+id/popupContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/btnMore"
+        app:layout_constraintTop_toBottomOf="@+id/btnMore"
+        android:elevation="4dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/complain"
+            style="@style/TextViewBase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?selectableItemBackground"
+            android:padding="16dp"
+            android:text="@string/popup_report" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

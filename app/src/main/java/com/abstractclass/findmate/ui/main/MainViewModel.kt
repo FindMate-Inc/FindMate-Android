@@ -9,7 +9,10 @@ import com.abstractclass.findmate.repositories.posts.PostsRepository
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class MainViewModel @Inject constructor(private val postRepository: PostsRepository) : ViewModel() {
+class MainViewModel @Inject constructor(
+    private val postRepository: PostsRepository
+) : ViewModel() {
+    var androidId: String? = null
     val searchLocation = MutableLiveData<String?>(null)
     val posts = MutableLiveData<List<Post>>()
     val screenState = MutableLiveData<States>(States.DEFAULT)
@@ -40,6 +43,16 @@ class MainViewModel @Inject constructor(private val postRepository: PostsReposit
                 val nextPosts = loadPosts(searchLocation.value, currentPage)
                 posts.value = items + (nextPosts ?: emptyList())
                 screenState.value = States.DEFAULT
+            }
+        }
+    }
+
+    fun reportPost(id: String) {
+        viewModelScope.launch {
+            if (androidId == null) return@launch
+
+            viewModelScope.launch {
+                val reportPostResponse = postRepository.reportPost(androidId!!, id)
             }
         }
     }

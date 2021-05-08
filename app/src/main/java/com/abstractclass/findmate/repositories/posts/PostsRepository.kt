@@ -3,31 +3,22 @@ package com.abstractclass.findmate.repositories.posts
 import com.abstractclass.findmate.repositories.Api
 import com.abstractclass.findmate.repositories.ResponseModel
 import com.abstractclass.findmate.repositories.ServerResponse
-import com.google.gson.Gson
+import com.abstractclass.findmate.repositories.posts.create.CreatePost
+import com.abstractclass.findmate.repositories.posts.list.SearchPostResponseModel
+import com.abstractclass.findmate.repositories.posts.report.PostReportRequest
+import com.abstractclass.findmate.repositories.posts.report.PostReportResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
 class PostsRepository @Inject constructor(
-    val gson: Gson,
-    val api: Api
+    private val api: Api
 ) {
     suspend fun createPost(post: CreatePost): ServerResponse<ResponseModel<Any?>> {
         return withContext(Dispatchers.IO) {
             try {
                 val response = api.createPost(post)
-                ServerResponse.SuccessResponse(response)
-            } catch (ex: Exception) {
-                ServerResponse.ErrorResponse(ex.message ?: "error")
-            }
-        }
-    }
-
-    suspend fun getPostById(id: String): ServerResponse<GetPostResponseModel> {
-        return withContext(Dispatchers.IO) {
-            try {
-                val response = api.getPostById(id)
                 ServerResponse.SuccessResponse(response)
             } catch (ex: Exception) {
                 ServerResponse.ErrorResponse(ex.message ?: "error")
@@ -46,12 +37,12 @@ class PostsRepository @Inject constructor(
         }
     }
 
-    suspend fun getPosts(): ServerResponse<ResponseGetPostsModel> {
+    suspend fun reportPost(userId:String, postId: String): ServerResponse<PostReportResponse> {
         return withContext(Dispatchers.IO) {
             try {
-                val response = api.getPosts()
+                val response = api.reportPost(postId, PostReportRequest(userId))
                 ServerResponse.SuccessResponse(response)
-            } catch (ex: java.lang.Exception) {
+            } catch (ex: Exception) {
                 ServerResponse.ErrorResponse(ex.message ?: "error")
             }
         }

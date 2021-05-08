@@ -1,6 +1,7 @@
-package com.abstractclass.findmate.repositories.posts
+package com.abstractclass.findmate.repositories.posts.list
 
 import com.abstractclass.findmate.repositories.ResponseModel
+import com.abstractclass.findmate.repositories.posts.Post
 import com.google.gson.annotations.SerializedName
 
 class SearchPostResponseModel: ResponseModel<List<Post>>() {

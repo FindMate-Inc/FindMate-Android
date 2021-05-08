@@ -151,6 +151,4 @@
         android:src="@drawable/ic_create"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
-
-    <include layout="@layout/popup" />
 </androidx.constraintlayout.widget.ConstraintLayout>

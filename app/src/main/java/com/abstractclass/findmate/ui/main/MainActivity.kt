@@ -2,6 +2,7 @@ package com.abstractclass.findmate.ui.main
 
 import android.content.Context
 import android.os.Bundle
+import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
@@ -20,17 +21,13 @@ import com.abstractclass.findmate.ViewModelFactory
 import com.abstractclass.findmate.ui.addons.SearchLocationEditText
 import com.abstractclass.findmate.ui.create.CreatePostActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.popup.*
 import javax.inject.Inject
 
 
 class MainActivity : AppCompatActivity() {
-
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
-
     private val viewModel by viewModels<MainViewModel> { viewModelFactory }
-
     private var keyBoardManager: InputMethodManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,9 +37,15 @@ class MainActivity : AppCompatActivity() {
         (application as FindMateApplication).getComponent().inject(this)
         keyBoardManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
 
+        viewModel.androidId = Settings.Secure.getString(
+            applicationContext.contentResolver,
+            Settings.Secure.ANDROID_ID
+        )
+
         initToolbar()
         initPosts()
 
+        btnCreatePost.setOnClickListener { CreatePostActivity.start(this) }
         viewModel.screenState.observe(this) {
             when (it) {
                 MainViewModel.States.DEFAULT -> showDefaultState()
@@ -51,18 +54,13 @@ class MainActivity : AppCompatActivity() {
                 else -> showDefaultState()
             }
         }
-
-        btnCreatePost.setOnClickListener { CreatePostActivity.start(this) }
     }
-    var layoutManager: LinearLayoutManager? = null
 
     private fun initPosts() {
-        layoutManager = LinearLayoutManager(applicationContext)
-        val adapter = MainAdapter(object : MainAdapter.OnMoreListener {
-            override fun onMoreClicked(x: Float, y: Float, id: String) {
-                popupContainer.x = x - popupContainer.width
-                popupContainer.y = y
-                popupInnerContainer.isVisible = true
+        var layoutManager = LinearLayoutManager(applicationContext)
+        val adapter = MainAdapter(object : MainAdapter.MoreMenuListener {
+            override fun onReportClicked(id: String) {
+                viewModel.reportPost(id)
             }
         })
         posts.adapter = adapter
@@ -72,19 +70,12 @@ class MainActivity : AppCompatActivity() {
             viewModel.loadNewPosts()
         }
 
-        posts.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+        posts.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 viewModel.loadMorePosts(layoutManager?.findLastVisibleItemPosition() ?: 0)
             }
         })
-
-
-        popupInnerContainer.setOnClickListener {
-            if (popupInnerContainer.isVisible) {
-                popupInnerContainer.isVisible = false
-            }
-        }
 
         viewModel.loadNewPosts()
         viewModel.posts.observe(this) {
@@ -93,7 +84,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initToolbar() {
-        filterContainer.setOnClickListener { viewModel.screenState.value = MainViewModel.States.SEARCH }
+        filterContainer.setOnClickListener {
+            viewModel.screenState.value = MainViewModel.States.SEARCH
+        }
 
         locationFilter.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
@@ -128,8 +121,10 @@ class MainActivity : AppCompatActivity() {
                 tvFilterText.text = it
             }
         }
-        ivBackButton.setOnClickListener { viewModel.screenState.value = MainViewModel.States.DEFAULT }
-        ivClear.setOnClickListener { viewModel.clearFilter()}
+        ivBackButton.setOnClickListener {
+            viewModel.screenState.value = MainViewModel.States.DEFAULT
+        }
+        ivClear.setOnClickListener { viewModel.clearFilter() }
     }
 
     override fun onBackPressed() {
@@ -149,7 +144,10 @@ class MainActivity : AppCompatActivity() {
         toolbarTitle.isVisible = false
         tvFilterText.isVisible = false
         locationFilter.requestFocus()
-        keyBoardManager?.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
+        keyBoardManager?.toggleSoftInput(
+            InputMethodManager.SHOW_FORCED,
+            InputMethodManager.HIDE_IMPLICIT_ONLY
+        )
     }
 
     private fun showDefaultState() {

@@ -1,5 +1,7 @@
 package com.abstractclass.findmate.di
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import com.abstractclass.findmate.repositories.Api
 import com.google.gson.Gson
@@ -13,8 +15,7 @@ import javax.inject.Singleton
 
 
 @Module
-class AppModule {
-
+class AppModule(val context: Context) {
     @Provides
     @Singleton
     fun provideGson(): Gson {
@@ -29,10 +30,10 @@ class AppModule {
 
         client.addInterceptor { chain ->
             val request = chain.request()
-            Log.e("RETROFITICH",
-                "\nrequest:\n${request.body().toString()}\nheaders:\n${request.headers()
-                    .toString()}"
-            )
+            val bodyBuffer = okio.Buffer()
+            request.body()?.writeTo(bodyBuffer)
+            Log.e("Retrofit", "url = ${request.url()}")
+            Log.e("Retrofit", "request: ${bodyBuffer.readUtf8()}")
             chain.proceed(request)
         }
         return client.build()
@@ -41,7 +42,6 @@ class AppModule {
     @Provides
     @Singleton
     fun provideRetrofit(gson: Gson, okHttpClient: OkHttpClient): Api {
-
         val retrofitClient = Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create(gson))
             .baseUrl(BASE_URL)
@@ -51,7 +51,14 @@ class AppModule {
         return retrofitClient.create(Api::class.java)
     }
 
+    @Provides
+    @Singleton
+    fun providePreferences(): SharedPreferences {
+        return context.getSharedPreferences(SHARED_PREFERENCES_FILE, Context.MODE_PRIVATE)
+    }
+
     companion object {
         const val BASE_URL = "https://find-mate-api.herokuapp.com/api/"
+        const val SHARED_PREFERENCES_FILE = "com.example.findmate.settings"
     }
 }
