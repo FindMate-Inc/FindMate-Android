@@ -42,4 +42,5 @@
     <string name="popup_report">Пожаловаться</string>
     <string name="postsLocationFilter">Поиск по локации</string>
     <string name="mainFilterLabel">Фильтр</string>
+    <string name="reportSuccess">Жалоба отправлена</string>
 </resources>

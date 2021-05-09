@@ -66,13 +66,22 @@ class MainViewModel @Inject constructor(
 
                 currentPage = response.response.pagination.page
                 totalPages = response.response.pagination.pagesCount
-                return response.response.data
+
+                return filterNotBlacklistedPosts(response.response.data)
             }
 
             is ServerResponse.ErrorResponse -> {
                 //show error mb
                 return null
             }
+        }
+    }
+
+    private fun filterNotBlacklistedPosts(posts: List<Post>): List<Post> {
+        return posts.filter { post ->
+            val isReportedByUser = androidId in post.reports.reportedBy
+            val isBlacklisted = post.reports.isBlacklisted
+            !isReportedByUser && !isBlacklisted
         }
     }
 

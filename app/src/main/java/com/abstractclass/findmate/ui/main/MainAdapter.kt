@@ -4,6 +4,7 @@ import android.text.InputFilter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
@@ -62,17 +63,16 @@ class MainAdapter(private val moreMenuListener: MoreMenuListener) :
 
         view.tvLocation.text = item.locations.joinToString()
 
-        val random = Random.nextInt(0, 100)
-        if (random > 60) {
-            view.container.background =
-                ContextCompat.getDrawable(view.context, R.drawable.drawable_post_background_orange)
+        //TODO: add getItemTypeForThis
+        if (item.isReportedNow) {
+            setReportedState(view)
         } else {
-            view.container.background =
-                ContextCompat.getDrawable(view.context, R.drawable.drawable_post_background_blue)
+            setDefaultState(view)
         }
 
         initMoreMenu(view, item)
 
+        //TODO: fix mist
         /*val onClickListener = if (item.couldMinimize) {
             View.OnClickListener {
                 item.isMinimized = !item.isMinimized
@@ -86,11 +86,34 @@ class MainAdapter(private val moreMenuListener: MoreMenuListener) :
         view.tvText.filters = if (item.isMinimized) minimizedFilter else maximizedFilter*/
     }
 
+    private fun setReportedState(view: View) {
+        view.popupContainer.isVisible = false
+        view.content.isVisible = false
+        view.tvReportSend.isVisible = true
+        view.container.background =
+            ContextCompat.getDrawable(view.context, R.drawable.rectangle_unselected)
+    }
+
+    private fun setDefaultState(view: View) {
+        view.content.isVisible = true
+        view.tvReportSend.isVisible = false
+        view.container.background
+        val random = Random.nextInt(0, 100)
+        if (random > 60) {
+            view.container.background =
+                ContextCompat.getDrawable(view.context, R.drawable.drawable_post_background_orange)
+        } else {
+            view.container.background =
+                ContextCompat.getDrawable(view.context, R.drawable.drawable_post_background_blue)
+        }
+    }
+
     private fun initMoreMenu(view: View, item: PostAdapterItem) {
         view.btnMore.setOnClickListener {
             openedMenuItemView?.isVisible = false
             view.popupContainer.isVisible = true
             openedMenuItemView = view.popupContainer
+            item.isReportedNow = true
         }
 
         view.root.setOnClickListener {
@@ -99,7 +122,9 @@ class MainAdapter(private val moreMenuListener: MoreMenuListener) :
 
         view.complain.setOnClickListener {
             moreMenuListener.onReportClicked(item.id)
-            openedMenuItemView?.isVisible = false
+            item.isReportedNow = true
+            setReportedState(view)
+            Toast.makeText(view.context, view.context.getString(R.string.reportSuccess), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -122,7 +147,8 @@ class MainAdapter(private val moreMenuListener: MoreMenuListener) :
         val createdDate: Long,
         val couldMinimize: Boolean,
         var isMinimized: Boolean,
-        var isMenuOpened: Boolean
+        var isMenuOpened: Boolean,
+        var isReportedNow: Boolean
     )
 
     companion object {
@@ -139,7 +165,8 @@ class MainAdapter(private val moreMenuListener: MoreMenuListener) :
                     createdDate = it.createdAt,
                     couldMinimize = it.text.length > MIN_TEXT_LENGTH,
                     isMinimized = true,
-                    isMenuOpened = false
+                    isMenuOpened = false,
+                    isReportedNow = false,
                 )
             }
         }
