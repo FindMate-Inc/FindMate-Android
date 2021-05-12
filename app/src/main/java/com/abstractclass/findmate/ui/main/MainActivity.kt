@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -49,10 +50,16 @@ class MainActivity : AppCompatActivity() {
         viewModel.screenState.observe(this) {
             when (it) {
                 MainViewModel.States.DEFAULT -> showDefaultState()
-                MainViewModel.States.SEARCH -> showSearchState()
                 MainViewModel.States.LOADING -> showLoadingState()
+                MainViewModel.States.NO_POSTS -> showInfoState()
+                MainViewModel.States.ERROR -> showErrorState()
                 else -> showDefaultState()
             }
+        }
+
+        btnFailedButtonReload.setOnClickListener {
+            btnFailedButtonReload.isEnabled = false
+            viewModel.loadNewPosts()
         }
     }
 
@@ -67,6 +74,7 @@ class MainActivity : AppCompatActivity() {
         posts.layoutManager = layoutManager
 
         postsSwipeContainer.setOnRefreshListener {
+            viewModel.screenState.value = MainViewModel.States.LOADING
             viewModel.loadNewPosts()
         }
 
@@ -77,6 +85,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+        viewModel.screenState.value = MainViewModel.States.LOADING
         viewModel.loadNewPosts()
         viewModel.posts.observe(this) {
             adapter.updateList(it)
@@ -85,7 +94,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initToolbar() {
         filterContainer.setOnClickListener {
-            viewModel.screenState.value = MainViewModel.States.SEARCH
+            showSearch(true)
         }
 
         locationFilter.addTextChangedListener(object : TextWatcher {
@@ -99,13 +108,14 @@ class MainActivity : AppCompatActivity() {
 
         locationFilter.setBackListener(object : SearchLocationEditText.BackActionListener {
             override fun onBack() {
-                viewModel.screenState.value = MainViewModel.States.DEFAULT
+                showSearch(false)
             }
         })
 
         locationFilter.setOnEditorActionListener(object : TextView.OnEditorActionListener {
             override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    showSearch(false)
                     viewModel.loadNewPosts()
                     return true
                 }
@@ -122,55 +132,74 @@ class MainActivity : AppCompatActivity() {
             }
         }
         ivBackButton.setOnClickListener {
-            viewModel.screenState.value = MainViewModel.States.DEFAULT
+            showSearch(false)
         }
         ivClear.setOnClickListener { viewModel.clearFilter() }
     }
 
     override fun onBackPressed() {
         if (locationFilter.isVisible) {
-            viewModel.screenState.value = MainViewModel.States.DEFAULT
+            showSearch(false)
         } else {
             super.onBackPressed()
         }
     }
 
-    private fun showSearchState() {
-        postsSwipeContainer.isRefreshing = false
-        locationFilter.isVisible = true
-        ivBackButton.isVisible = true
-        ivSearch.isVisible = false
-        ivClear.isVisible = true
-        toolbarTitle.isVisible = false
-        tvFilterText.isVisible = false
-        locationFilter.requestFocus()
-        keyBoardManager?.toggleSoftInput(
-            InputMethodManager.SHOW_FORCED,
-            InputMethodManager.HIDE_IMPLICIT_ONLY
-        )
+    fun showSearch(show: Boolean) {
+        locationFilter.isVisible = show
+        ivBackButton.isVisible = show
+        ivClear.isVisible = show
+        ivSearch.isVisible = !show
+        toolbarTitle.isVisible = !show
+        tvFilterText.isVisible = !show
+
+        if (show) {
+            locationFilter.requestFocus()
+            keyBoardManager?.toggleSoftInput(
+                InputMethodManager.SHOW_FORCED,
+                InputMethodManager.HIDE_IMPLICIT_ONLY
+            )
+        } else {
+            locationFilter.clearFocus()
+            keyBoardManager?.hideSoftInputFromWindow(root.windowToken, 0)
+        }
     }
 
     private fun showDefaultState() {
+        tvFailed.isVisible = false
+        ivFailed.isVisible = false
+        btnFailedButtonReload.isVisible = false
         postsSwipeContainer.isRefreshing = false
-        locationFilter.isVisible = false
-        ivBackButton.isVisible = false
-        toolbarTitle.isVisible = true
-        ivSearch.isVisible = true
-        ivClear.isVisible = false
-        tvFilterText.isVisible = true
-        locationFilter.clearFocus()
-        keyBoardManager?.hideSoftInputFromWindow(root.windowToken, 0)
+        postsSwipeContainer.isVisible = true
+        showSearch(false)
     }
 
     private fun showLoadingState() {
         postsSwipeContainer.isRefreshing = true
-        locationFilter.isVisible = false
-        ivBackButton.isVisible = false
-        toolbarTitle.isVisible = true
-        ivSearch.isVisible = true
-        ivClear.isVisible = false
-        tvFilterText.isVisible = true
-        locationFilter.clearFocus()
-        keyBoardManager?.hideSoftInputFromWindow(root.windowToken, 0)
+        postsSwipeContainer.isVisible = true
+        showSearch(false)
+    }
+
+    private fun showErrorState() {
+        postsSwipeContainer.isRefreshing = false
+        postsSwipeContainer.isVisible = false
+
+        tvFailed.text = getString(R.string.mainFailedError)
+        tvFailed.isVisible = true
+        ivFailed.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_error, null))
+        ivFailed.isVisible = true
+        btnFailedButtonReload.isEnabled = true
+        btnFailedButtonReload.isVisible = true
+        showSearch(false)
+    }
+
+    private fun showInfoState() {
+        postsSwipeContainer.isRefreshing = false
+        postsSwipeContainer.isVisible = false
+        tvFailed.text = getString(R.string.mainFailedNoElements)
+        tvFailed.isVisible = true
+        ivFailed.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_warning, null))
+        ivFailed.isVisible = true
+        btnFailedButtonReload.isVisible = false
     }
 }

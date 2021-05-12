@@ -25,12 +25,22 @@ class MainViewModel @Inject constructor(
     }
 
     fun loadNewPosts() {
-        screenState.value = States.LOADING
         viewModelScope.launch {
             currentPage = 1
             val newPosts = loadPosts(searchLocation.value, currentPage)
-            posts.value = newPosts ?: emptyList()
-            screenState.value = States.DEFAULT
+
+            when {
+                newPosts == null -> {
+                    screenState.value = States.ERROR
+                }
+                newPosts.isEmpty() -> {
+                    screenState.value = States.NO_POSTS
+                }
+                else -> {
+                    screenState.value = States.DEFAULT
+                    posts.value = newPosts!!
+                }
+            }
         }
     }
 
@@ -62,16 +72,16 @@ class MainViewModel @Inject constructor(
             is ServerResponse.SuccessResponse -> {
                 if (response.response.pagination?.page == null ||
                     response.response.data == null
-                ) return null
+                ) {
+                    return null
+                }
 
                 currentPage = response.response.pagination.page
                 totalPages = response.response.pagination.pagesCount
-
-                return filterNotBlacklistedPosts(response.response.data)
+                return filterNotBlacklistedPosts(response.response.data!!)
             }
 
             is ServerResponse.ErrorResponse -> {
-                //show error mb
                 return null
             }
         }
@@ -86,7 +96,7 @@ class MainViewModel @Inject constructor(
     }
 
     enum class States {
-        SEARCH, DEFAULT, LOADING
+        DEFAULT, LOADING, ERROR, NO_POSTS
     }
 
     companion object {

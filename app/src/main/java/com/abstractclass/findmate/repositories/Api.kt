@@ -8,7 +8,7 @@ import retrofit2.http.*
 
 interface Api {
     @GET("posts")
-    suspend fun getPostsByLocation(@Query("location") location: String?, @Query("page") page: Int): SearchPostResponseModel
+    suspend fun getPostsByLocation(@Query("location") location: String?, @Query("page") page: Int): SearchPostResponseModel?
 
     @POST("posts")
     suspend fun createPost(@Body createPost: CreatePost): ResponseModel<Any?>

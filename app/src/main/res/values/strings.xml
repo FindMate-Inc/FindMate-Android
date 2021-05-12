@@ -43,4 +43,7 @@
     <string name="postsLocationFilter">Поиск по локации</string>
     <string name="mainFilterLabel">Фильтр</string>
     <string name="reportSuccess">Жалоба отправлена</string>
+    <string name="mainFailedNoElements">Мы не смогли найти анкеты по запрошеной локации</string>
+    <string name="mainFailedError">Ой! Что-то пошло не так\nПри загрузке анкет возникла ошибка</string>
+    <string name="mainRefreshTitle">Обновить</string>
 </resources>

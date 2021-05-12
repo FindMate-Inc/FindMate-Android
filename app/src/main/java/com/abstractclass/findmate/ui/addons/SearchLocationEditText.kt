@@ -15,6 +15,7 @@ public class SearchLocationEditText(context: Context, attrs: AttributeSet?): App
     override fun onKeyPreIme(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             backActionListener?.onBack()
+            return true
         }
         return false
     }

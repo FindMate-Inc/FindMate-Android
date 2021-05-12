@@ -7,7 +7,7 @@ open class ResponseModel<T>() {
     val status: Status? = null
 
     @SerializedName("data")
-    val data: T? = null
+    var data: T? = null
 
     data class Status(
         @SerializedName("success")
