@@ -30,7 +30,7 @@ class PostsRepository @Inject constructor(
         return withContext(Dispatchers.IO) {
             try {
                 val response = api.getPostsByLocation(location, page)
-                ServerResponse.SuccessResponse(response)
+                ServerResponse.SuccessResponse(response!!)
             } catch (ex: Exception) {
                 ServerResponse.ErrorResponse(ex.message ?: "error")
             }

@@ -7,10 +7,12 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.observe
 import com.abstractclass.findmate.FindMateApplication
 import com.abstractclass.findmate.R
@@ -120,7 +122,44 @@ class CreatePostActivity : AppCompatActivity() {
             }
         }
 
-        btnCreatePost.setOnClickListener { viewModel.createPost() }
+        viewModel.screenState.observe(this) {
+            when (it) {
+                CreatePostViewModel.States.DEFAULT -> {
+                    btnCreatePost.isEnabled = true
+                    btnCreatePost.text = getString(R.string.createPostText)
+                    pbCreatePost.isVisible = false
+                }
+                CreatePostViewModel.States.LOADING -> {
+                    btnCreatePost.isEnabled = false
+                    btnCreatePost.text = ""
+                    pbCreatePost.isVisible = true
+                }
+            }
+        }
+
+        viewModel.wasCreatePostSucceed.observe(this) {
+            if (it) {
+                viewModel.screenState.value = CreatePostViewModel.States.DEFAULT
+                //replacement to singleLiveEvent
+                viewModel.wasCreatePostSucceed.value = false
+                Toast.makeText(applicationContext, getString(R.string.createPostSuccess), Toast.LENGTH_LONG).show()
+                finish()
+            }
+        }
+
+        viewModel.wasCreatePostFailed.observe(this) {
+            if (it) {
+                viewModel.screenState.value = CreatePostViewModel.States.DEFAULT
+                //replacement to singleLiveEvent
+                viewModel.wasCreatePostFailed.value = false
+                Toast.makeText(applicationContext, getString(R.string.createPostError), Toast.LENGTH_LONG).show()
+            }
+        }
+
+        btnCreatePost.setOnClickListener {
+            viewModel.createPost()
+        }
+
         ivBackButton.setOnClickListener { finish() }
     }
 

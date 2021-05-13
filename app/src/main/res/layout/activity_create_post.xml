@@ -130,7 +130,7 @@
                 android:layout_marginEnd="24dp"
                 android:layout_marginBottom="16dp"
                 app:helperText="@string/createPostTextHelper"
-                app:layout_constraintBottom_toTopOf="@+id/btnCreatePost"
+                app:layout_constraintBottom_toTopOf="@+id/btnCreatePostContainer"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvRules">
@@ -147,22 +147,40 @@
                     android:textSize="18sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnCreatePost"
+            <FrameLayout
+                android:id="@+id/btnCreatePostContainer"
                 android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_marginStart="24dp"
-                android:layout_marginEnd="24dp"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:focusable="false"
                 android:layout_marginBottom="16dp"
-                android:background="@drawable/primary_button_background"
-                android:fontFamily="@font/roboto_medium"
-                android:gravity="center"
-                android:text="@string/createPostText"
-                android:textColor="@color/white"
-                android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCreatePost"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginEnd="24dp"
+                    android:background="@drawable/primary_button_background"
+                    android:fontFamily="@font/roboto_medium"
+                    android:gravity="center"
+                    android:text="@string/createPostText"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+                <ProgressBar
+                    android:id="@+id/pbCreatePost"
+                    style="@style/CircularProgress"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    android:indeterminate="true"
+                    android:translationZ="8dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"/>
+            </FrameLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 </LinearLayout>

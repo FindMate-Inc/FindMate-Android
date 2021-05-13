@@ -32,6 +32,8 @@
     <string name="createPostLocationHelper">Минск, Гродно, Беларусь</string>
     <string name="createPostTextTitle">Пост</string>
     <string name="createPostText">Создать</string>
+    <string name="createPostSuccess">Ваша анкета опубликована</string>
+    <string name="createPostError">Ошибка при создании анкеты</string>
     <string name="createPostTextHelper">*обязательное поле</string>
     <string name="createPostTextError">поле должно содержать больше 25 и меньше 4000 символов</string>
 

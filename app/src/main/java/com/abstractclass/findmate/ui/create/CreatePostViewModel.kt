@@ -20,10 +20,16 @@ class CreatePostViewModel @Inject constructor(val postRepository: PostsRepositor
 
     val textError = MutableLiveData<Boolean>(false)
 
+    val screenState = MutableLiveData<States>(States.DEFAULT)
+    val wasCreatePostSucceed = MutableLiveData<Boolean>(false)
+    val wasCreatePostFailed = MutableLiveData<Boolean>(false)
+
     fun createPost() {
         if (!isValid()) return
 
-        viewModelScope.launch(Dispatchers.IO) {
+        screenState.value = States.LOADING
+
+        viewModelScope.launch {
             val response = postRepository.createPost(
                 CreatePost(
                     text = text.value!!,
@@ -34,8 +40,13 @@ class CreatePostViewModel @Inject constructor(val postRepository: PostsRepositor
             )
 
             when (response) {
-                is ServerResponse.SuccessResponse -> Log.d("TestPish", "${response.response.data}")
-                is ServerResponse.ErrorResponse -> Log.d("TestPish", "${response.errorMessage}")
+                is ServerResponse.SuccessResponse -> {
+                    wasCreatePostSucceed.value = true
+                }
+
+                is ServerResponse.ErrorResponse -> {
+                    wasCreatePostFailed.value = true
+                }
             }
         }
     }
@@ -72,6 +83,10 @@ class CreatePostViewModel @Inject constructor(val postRepository: PostsRepositor
         val sexString = sex.value
         if (sexString.isNullOrEmpty() || sexString.isBlank()) return DEFAULT_SEX
         return sexString.toInt()
+    }
+
+    enum class States {
+        DEFAULT, LOADING
     }
 
     companion object {
