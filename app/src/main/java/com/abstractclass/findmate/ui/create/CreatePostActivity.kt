@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputFilter
 import android.text.TextWatcher
 import android.view.View
 import android.widget.Toast
@@ -78,6 +79,10 @@ class CreatePostActivity : AppCompatActivity() {
                 inputLocationContainer.helperText = getString(R.string.createPostLocationHelper)
             } else inputLocationContainer.isHelperTextEnabled = false
         }
+
+        inputLocation.filters = arrayOf(InputFilter { source, start, end, dest, dstart, dend ->
+            return@InputFilter source.filterNot { specialCharacters.contains(it) }
+        })
 
         inputText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
@@ -164,6 +169,8 @@ class CreatePostActivity : AppCompatActivity() {
     }
 
     companion object {
+        const val specialCharacters = "@#₽_&-+()/*\"\':;!?.%=~`|•√π÷×¶∆£€\$¢^°{}\\©®™✓[]"
+
         fun start(context: Context) {
             val intent = Intent(context, CreatePostActivity::class.java)
             context.startActivity(intent)
