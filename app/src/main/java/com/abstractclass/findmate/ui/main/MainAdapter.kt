@@ -7,12 +7,14 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.abstractclass.findmate.R
 import com.abstractclass.findmate.asRelativeTime
 import com.abstractclass.findmate.getUtcOffsetDateTime
 import com.abstractclass.findmate.repositories.posts.Post
 import kotlinx.android.synthetic.main.main_post_item.view.*
+import kotlinx.coroutines.*
 import kotlin.random.Random
 
 
@@ -22,7 +24,9 @@ class MainAdapter(private val moreMenuListener: MoreMenuListener) :
 
     private val minimizedFilter = arrayOf(InputFilter.LengthFilter(MIN_TEXT_LENGTH))
     private val maximizedFilter = arrayOf(InputFilter.LengthFilter(MAX_TEXT_LENGTH))
+
     var openedMenuItemView: View? = null
+    var openedItem: PostAdapterItem? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
         val view =
@@ -37,10 +41,18 @@ class MainAdapter(private val moreMenuListener: MoreMenuListener) :
         return items.size
     }
 
-    fun updateList(newItems: List<Post>) {
-        items.clear()
-        items.addAll(toAdapterItems(newItems))
-        notifyDataSetChanged()
+    fun updateList(coroutineScope: CoroutineScope, newItems: List<Post>) {
+        val newPosts = toAdapterItems(newItems)
+        coroutineScope.launch {
+            withContext(Dispatchers.Default) {
+                val diffResult = DiffUtil.calculateDiff(PostDiffCallback(items, newPosts))
+                withContext(Dispatchers.Main) {
+                    items.clear()
+                    items.addAll(newPosts)
+                    diffResult.dispatchUpdatesTo(this@MainAdapter)
+                }
+            }
+        }
     }
 
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
@@ -113,8 +125,13 @@ class MainAdapter(private val moreMenuListener: MoreMenuListener) :
             openedMenuItemView?.isVisible = false
             view.popupContainer.isVisible = true
             openedMenuItemView = view.popupContainer
-            item.isReportedNow = true
+
+            openedItem?.isMenuOpened = false
+            openedItem = item
+            item.isMenuOpened = true
         }
+
+        view.popupContainer.isVisible = item.isMenuOpened
 
         view.root.setOnClickListener {
             hidePanel()
@@ -123,6 +140,7 @@ class MainAdapter(private val moreMenuListener: MoreMenuListener) :
         view.complain.setOnClickListener {
             moreMenuListener.onReportClicked(item.id)
             item.isReportedNow = true
+            item.isMenuOpened = false
             setReportedState(view)
             Toast.makeText(view.context, view.context.getString(R.string.reportSuccess), Toast.LENGTH_SHORT).show()
         }
@@ -150,6 +168,29 @@ class MainAdapter(private val moreMenuListener: MoreMenuListener) :
         var isMenuOpened: Boolean,
         var isReportedNow: Boolean
     )
+
+    class PostDiffCallback(private val oldPosts: List<PostAdapterItem>, private val newPosts: List<PostAdapterItem>): DiffUtil.Callback() {
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldPosts[oldItemPosition].id == newPosts[newItemPosition].id
+        }
+
+        override fun getOldListSize(): Int {
+            return oldPosts.size
+        }
+
+        override fun getNewListSize(): Int {
+            return newPosts.size
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            val oldItem = oldPosts[oldItemPosition]
+            val newItem = oldPosts[newItemPosition]
+            return (oldItem.isMinimized && newItem.isMinimized)
+                    && (oldItem.isMenuOpened && newItem.isMenuOpened)
+                    && (oldItem.isReportedNow && newItem.isReportedNow)
+        }
+
+    }
 
     companion object {
         const val MIN_TEXT_LENGTH = 300

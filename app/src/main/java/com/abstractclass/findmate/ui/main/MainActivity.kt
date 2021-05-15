@@ -13,6 +13,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -88,7 +89,7 @@ class MainActivity : AppCompatActivity() {
         viewModel.screenState.value = MainViewModel.States.LOADING
         viewModel.loadNewPosts()
         viewModel.posts.observe(this) {
-            adapter.updateList(it)
+            adapter.updateList(lifecycleScope, it)
         }
     }
 

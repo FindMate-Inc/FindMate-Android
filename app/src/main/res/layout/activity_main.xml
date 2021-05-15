@@ -37,7 +37,7 @@
         android:layout_height="wrap_content"
         app:barrierAllowsGoneWidgets="false"
         app:barrierDirection="end"
-        app:constraint_referenced_ids="parent, toolbarTitle" />
+        app:constraint_referenced_ids="toolbarTitle" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
