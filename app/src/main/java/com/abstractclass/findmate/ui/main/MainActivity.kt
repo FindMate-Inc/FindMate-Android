@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -17,6 +18,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE
 import com.abstractclass.findmate.FindMateApplication
 import com.abstractclass.findmate.R
 import com.abstractclass.findmate.ViewModelFactory
@@ -44,11 +46,14 @@ class MainActivity : AppCompatActivity() {
             Settings.Secure.ANDROID_ID
         )
 
+        viewModel.SCROLL_THRESHOLD_CREATE_POST = resources.getDimension(R.dimen.create_post_button_scroll_threshold)
+
         initToolbar()
         initPosts()
 
         btnCreatePost.setOnClickListener { CreatePostActivity.start(this) }
         viewModel.screenState.observe(this) {
+            Log.d("TestPish", "it state ${it}")
             when (it) {
                 MainViewModel.States.DEFAULT -> showDefaultState()
                 MainViewModel.States.LOADING -> showLoadingState()
@@ -61,6 +66,14 @@ class MainActivity : AppCompatActivity() {
         btnFailedButtonReload.setOnClickListener {
             btnFailedButtonReload.isEnabled = false
             viewModel.loadNewPosts()
+        }
+
+        viewModel.isCreatePostButtonExtended.observe(this) {
+            if (it) {
+                btnCreatePost.extend()
+            } else {
+                btnCreatePost.shrink()
+            }
         }
     }
 
@@ -83,6 +96,14 @@ class MainActivity : AppCompatActivity() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 viewModel.loadMorePosts(layoutManager?.findLastVisibleItemPosition() ?: 0)
+                viewModel.checkCreatePostButtonState(dy)
+            }
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (newState == SCROLL_STATE_IDLE) {
+                    viewModel.onScrollIdle()
+                }
             }
         })
 
@@ -199,7 +220,13 @@ class MainActivity : AppCompatActivity() {
         postsSwipeContainer.isVisible = false
         tvFailed.text = getString(R.string.mainFailedNoElements)
         tvFailed.isVisible = true
-        ivFailed.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_warning, null))
+        ivFailed.setImageDrawable(
+            ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.ic_warning,
+                null
+            )
+        )
         ivFailed.isVisible = true
         btnFailedButtonReload.isVisible = false
     }

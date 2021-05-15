@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="create_post_button_scroll_threshold">16dp</dimen>
+</resources>

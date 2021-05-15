@@ -1,5 +1,6 @@
 package com.abstractclass.findmate.ui.main
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,10 +16,15 @@ class MainViewModel @Inject constructor(
     var androidId: String? = null
     val searchLocation = MutableLiveData<String?>(null)
     val posts = MutableLiveData<List<Post>>()
-    val screenState = MutableLiveData<States>(States.DEFAULT)
+    val screenState = MutableLiveData(States.DEFAULT)
+    val isCreatePostButtonExtended = MutableLiveData(true)
 
     var currentPage = 1
     var totalPages = 1
+
+    var SCROLL_THRESHOLD_CREATE_POST = 200f
+    var totalDelta = 0
+    var lastDirectionVector = 0
 
     fun clearFilter() {
         searchLocation.value = ""
@@ -93,6 +99,26 @@ class MainViewModel @Inject constructor(
             val isBlacklisted = post.reports.isBlacklisted
             !isReportedByUser && !isBlacklisted
         }
+    }
+
+    fun checkCreatePostButtonState(yDelta: Int) {
+        if (lastDirectionVector * yDelta < 0) {
+            totalDelta = 0
+        }
+
+        totalDelta += yDelta
+
+        val isCreatePostExtended = isCreatePostButtonExtended.value
+        if (totalDelta > SCROLL_THRESHOLD_CREATE_POST && isCreatePostExtended != false) {
+            isCreatePostButtonExtended.value = false
+        } else if (totalDelta < 0 - SCROLL_THRESHOLD_CREATE_POST && isCreatePostExtended != true) {
+            isCreatePostButtonExtended.value = true
+        }
+        lastDirectionVector = yDelta
+    }
+
+    fun onScrollIdle() {
+        totalDelta = 0
     }
 
     enum class States {
