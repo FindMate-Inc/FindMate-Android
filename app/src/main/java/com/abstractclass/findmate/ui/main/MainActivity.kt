@@ -1,6 +1,7 @@
 package com.abstractclass.findmate.ui.main
 
 import android.content.Context
+import android.graphics.Shader
 import android.os.Bundle
 import android.provider.Settings
 import android.text.Editable
@@ -9,9 +10,11 @@ import android.util.Log
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
@@ -24,6 +27,7 @@ import com.abstractclass.findmate.R
 import com.abstractclass.findmate.ViewModelFactory
 import com.abstractclass.findmate.ui.addons.SearchLocationEditText
 import com.abstractclass.findmate.ui.create.CreatePostActivity
+import com.abstractclass.findmate.ui.utils.TileDrawable
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
@@ -51,9 +55,12 @@ class MainActivity : AppCompatActivity() {
         initToolbar()
         initPosts()
 
+        val iv = findViewById<ImageView>(R.id.background)
+        val d = ContextCompat.getDrawable(this, R.drawable.main_background)
+        iv.setImageDrawable(TileDrawable(d!!, Shader.TileMode.REPEAT))
+
         btnCreatePost.setOnClickListener { CreatePostActivity.start(this) }
         viewModel.screenState.observe(this) {
-            Log.d("TestPish", "it state ${it}")
             when (it) {
                 MainViewModel.States.DEFAULT -> showDefaultState()
                 MainViewModel.States.LOADING -> showLoadingState()

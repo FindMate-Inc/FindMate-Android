@@ -16,19 +16,20 @@
         <item name="colorAccent">@color/white</item>
         <item name="windowActionBar">false</item>
         <item name="actionBarItemBackground">@color/white</item>
+        <item name="android:statusBarColor">@color/primary_dark</item>
 
         <item name="windowNoTitle">true</item>
     </style>
 
     <style name="TextMain">
         <item name="android:fontFamily">@font/sansserif_regular</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/black_87</item>
     </style>
 
     <style name="TextCaption">
         <item name="android:fontFamily">@font/roboto_regular</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">12sp</item>
         <item name="android:textColor">@color/black_60</item>
     </style>
 

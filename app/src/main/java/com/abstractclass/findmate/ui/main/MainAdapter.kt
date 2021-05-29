@@ -109,15 +109,6 @@ class MainAdapter(private val moreMenuListener: MoreMenuListener) :
     private fun setDefaultState(view: View) {
         view.content.isVisible = true
         view.tvReportSend.isVisible = false
-        view.container.background
-        val random = Random.nextInt(0, 100)
-        if (random > 60) {
-            view.container.background =
-                ContextCompat.getDrawable(view.context, R.drawable.drawable_post_background_orange)
-        } else {
-            view.container.background =
-                ContextCompat.getDrawable(view.context, R.drawable.drawable_post_background_blue)
-        }
     }
 
     private fun initMoreMenu(view: View, item: PostAdapterItem) {
