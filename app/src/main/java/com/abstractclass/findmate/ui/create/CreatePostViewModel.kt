@@ -29,7 +29,7 @@ class CreatePostViewModel @Inject constructor(val postRepository: PostsRepositor
 
         screenState.value = States.LOADING
 
-        viewModelScope.launch {
+        /*viewModelScope.launch {
             val response = postRepository.createPost(
                 CreatePost(
                     text = text.value!!,
@@ -48,7 +48,7 @@ class CreatePostViewModel @Inject constructor(val postRepository: PostsRepositor
                     wasCreatePostFailed.value = true
                 }
             }
-        }
+        }*/
     }
 
     private fun isValid():Boolean {

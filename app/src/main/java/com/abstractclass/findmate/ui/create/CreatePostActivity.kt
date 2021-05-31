@@ -100,7 +100,7 @@ class CreatePostActivity : AppCompatActivity() {
                     ColorStateList.valueOf(
                         ContextCompat.getColor(
                             this,
-                            R.color.pomegranate
+                            R.color.error
                         )
                     )
                 )
@@ -115,7 +115,7 @@ class CreatePostActivity : AppCompatActivity() {
                     ColorStateList.valueOf(
                         ContextCompat.getColor(
                             this,
-                            R.color.black_38
+                            R.color.font_color_disabled
                         )
                     )
                 )

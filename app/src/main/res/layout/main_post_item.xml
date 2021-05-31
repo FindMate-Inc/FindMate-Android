@@ -78,13 +78,12 @@
             app:layout_constraintEnd_toEndOf="@+id/tvText"
             app:layout_constraintStart_toStartOf="@+id/tvText" />
 
-
         <TextView
             android:id="@+id/tvTime"
             style="@style/TextCaption"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginBottom="16dp"
@@ -99,7 +98,7 @@
             android:id="@+id/popupContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@color/popup_background_color"
             android:elevation="4dp"
             android:orientation="vertical"
             android:visibility="gone"
@@ -108,7 +107,7 @@
 
             <TextView
                 android:id="@+id/complain"
-                style="@style/TextViewBase"
+                style="@style/TextMain"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="?selectableItemBackground"

@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/create_post_background_color"
     android:orientation="vertical">
 
     <LinearLayout
@@ -23,7 +24,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:padding="8dp"
-            android:src="@drawable/ic_arrow_back" />
+            android:src="@drawable/ic_arrow_back_white" />
 
         <TextView
             android:id="@+id/toolbarTitle"
@@ -35,7 +36,7 @@
             android:paddingStart="8dp"
             android:paddingLeft="8dp"
             android:text="@string/createPostTitle"
-            android:textColor="@color/white"
+            android:textColor="@color/accent"
             android:textSize="20sp" />
     </LinearLayout>
 
@@ -47,8 +48,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white">
+            android:layout_height="match_parent">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/inputAgeContainer"
@@ -121,7 +121,7 @@
                 android:paddingStart="24dp"
                 android:paddingEnd="24dp"
                 android:text="@string/createPostRulesShort"
-                android:textColor="@color/black_87"
+                android:textColor="@color/font_color"
                 android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -159,8 +159,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:clickable="false"
+                android:clipToPadding="false"
+                android:clipChildren="false"
                 android:focusable="false"
-                android:layout_marginBottom="16dp"
+                android:paddingBottom="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
@@ -168,9 +170,10 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnCreatePost"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
                     android:layout_marginEnd="24dp"
+                    app:backgroundTint="@color/create_post_button_color"
                     android:background="@drawable/primary_button_background"
                     android:fontFamily="@font/roboto_medium"
                     android:gravity="center"

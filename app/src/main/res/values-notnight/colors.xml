@@ -13,6 +13,8 @@
     <color name="create_post_edit_view_underline">@color/black_5</color>
     <color name="create_post_edit_view_underline_selected">@color/yellow_orange</color>
     <color name="create_post_edit_view_hint_color">@color/black_60</color>
+    <color name="create_pos_edit_view_line_default">@color/black_5</color>
+    <color name="create_pos_edit_view_line_selected">@color/yellow_orange</color>
 
     <color name="background">@color/merino</color>
     <color name="background_line">@color/negroni</color>
@@ -22,18 +24,4 @@
     <color name="font_color_caption">@color/black_60</color>
     <color name="font_color_disabled">@color/black_38</color>
     <color name="field_color_disabled">@color/black_5</color>
-    <color name="create_pos_edit_view_line_default">@color/black_5</color>
-    <color name="create_pos_edit_view_line_selected">@color/yellow_orange</color>
-
-    <color name="white">#FFFFFFFF</color>
-    <color name="negroni">#FFE4C6</color>
-    <color name="merino">#f8f3ee</color>
-    <color name="ochre">#C77A1A</color>
-    <color name="yellow_orange">#FFA94C</color>
-    <color name="pomegranate">#f44336</color>
-
-    <color name="black_87">#DE000000</color>
-    <color name="black_60">#99000000</color>
-    <color name="black_38">#61000000</color>
-    <color name="black_5">#0D000000</color>
 </resources>
