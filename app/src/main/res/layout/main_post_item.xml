@@ -19,7 +19,7 @@
 
         <TextView
             android:id="@+id/tvDescription"
-            style="@style/TextCaption"
+            style="@style/TextMain"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -80,7 +80,7 @@
 
         <TextView
             android:id="@+id/tvTime"
-            style="@style/TextCaption"
+            style="@style/TextTiny"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"

@@ -1,29 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="primary">#4A616E</color>
-    <!--<color name="primary">#4e443b</color>  #2c363c-->
-    <color name="primary_dark">#263037</color>
+    <color name="primary">#425967</color>
+    <!--<color name="primary">#4e443b</color>
+      post back #35444E
+      #2c363c-->
+    <color name="primary_dark">#141A20</color>
     <color name="accent">@color/white</color>
 
-    <color name="post_item_background">#35444E</color>
-    <color name="create_post_button_color">#5C92A3</color>
-    <color name="popup_background_color">#4A616E</color>
-    <color name="search_background_color">#35444E</color>
-    <color name="create_post_background_color">#1B2429</color>
-    <color name="create_post_edit_view_background">#1B2429</color>
+    <color name="post_item_background">@color/outer_space</color>
+    <color name="create_post_button_color">#325368</color>
+    <color name="popup_background_color">#425967</color>
+    <color name="search_background_color">#212F37</color>
+    <color name="create_post_background_color">#1D2325</color>
+    <color name="create_post_edit_view_background">@color/woodsmoke</color>
     <color name="create_post_edit_view_underline">@color/white</color>
     <color name="create_post_edit_view_underline_selected">@color/white</color>
     <color name="create_post_edit_view_hint_color">@color/white</color>
-    <color name="create_pos_edit_view_line_default">@color/white</color>
+    <color name="create_pos_edit_view_line_default">@color/white_60</color>
     <color name="create_pos_edit_view_line_selected">@color/white</color>
 
-    <color name="background">#1B2429</color>
-    <color name="background_line">#3B3E40</color>
+    <color name="background">@color/woodsmoke</color>
+    <color name="background_line">#282A2B</color>
     <color name="background_front">@color/white</color>
     <color name="error">@color/pomegranate</color>
     <color name="font_color">@color/white</color>
-    <color name="font_color_caption">@color/white</color>
-    <color name="font_color_disabled">@color/white</color>
+    <color name="font_color_caption">@color/white_87</color>
+    <color name="font_color_disabled">@color/white_60</color>
     <color name="field_color_disabled">@color/white</color>
 </resources>

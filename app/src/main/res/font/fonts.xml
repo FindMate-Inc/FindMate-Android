@@ -7,7 +7,7 @@
     <font
         app:font="@font/roboto_medium"
         app:fontStyle="normal"
-        app:fontWeight="500" />
+        app:fontWeight="400" />
     <font
         app:font="@font/sansserif_regular"
         app:fontStyle="normal"
